@@ -1,45 +1,8 @@
-use std::{fmt::Debug, str::FromStr};
+use std::fmt::Debug;
 
 use anyhow::{bail, Context, Result};
 
-#[derive(Debug)]
-pub enum Token {
-    Function {
-        name: String,
-        body: Vec<Token>,
-        public: bool,
-    },
-    FunctionCall {
-        name: String,
-    },
-    If {
-        condition: Condition,
-        body: Vec<Token>,
-        else_body: Vec<Token>,
-    },
-    While {
-        condition: Condition,
-        body: Vec<Token>,
-    },
-    Instruction(String),
-}
-
-#[derive(Debug)]
-pub struct Condition {
-    a: Vec<Token>,
-    b: Vec<Token>,
-    comparison: Comparison,
-}
-
-#[derive(Debug)]
-pub enum Comparison {
-    Eq,
-    Neq,
-    Gt,
-    Lt,
-    Gte,
-    Lte,
-}
+use crate::token::{Comparison, Condition, Token};
 
 pub struct Tokenizer {
     chars: Vec<char>,
@@ -241,22 +204,6 @@ impl Tokenizer {
         let condition = self.tokenize_condition()?;
         let body = self.tokenize_block()?;
         Ok(Token::While { condition, body })
-    }
-}
-
-impl FromStr for Comparison {
-    type Err = anyhow::Error;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        Ok(match s {
-            "==" => Comparison::Eq,
-            "!=" => Comparison::Neq,
-            ">" => Comparison::Gt,
-            "<" => Comparison::Lt,
-            ">=" => Comparison::Gte,
-            "<=" => Comparison::Lte,
-            _ => bail!("Invalid comparison operator: {}", s),
-        })
     }
 }
 

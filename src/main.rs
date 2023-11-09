@@ -3,7 +3,9 @@ use std::fs;
 use anyhow::Result;
 use tokenize::Tokenizer;
 
+mod codegen;
 mod ident;
+mod token;
 mod tokenize;
 
 const INPUT: &str = "test.dm42";
