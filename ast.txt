@@ -1,0 +1,44 @@
+[
+    Function { 
+        name: "sort",
+        body: [
+            If {
+                condition: Condition {
+                    a: [Instruction("MAT?")],
+                    b: [Instruction("0")],
+                    comparison: Eq
+                }, 
+                body: [
+                    Instruction("\"X is not a matrix\""),
+                    Instruction("AVIEW"),
+                    Instruction("RTN")
+                ],
+                else_body: [] 
+            }, 
+            Instruction("STO \"A\""),
+            Instruction("INDEX \"A\""),
+            Instruction("1"),
+            Instruction("1"),
+            Instruction("STOIJ"),
+            Instruction("DROPN 2"),
+            While {
+                condition: Condition {
+                    a: [Instruction("FC? 76")],
+                    b: [Instruction("1")],
+                    comparison: Eq
+                },
+                body: [
+                    Instruction("[MIN]"),
+                    Instruction("DROP"),
+                    Instruction("RCLIJ"),
+                    Instruction("DROP"),
+                    Instruction("R<>R"),
+                    Instruction("DROPN 2"),
+                    Instruction("I+")
+                ]
+            },
+            Instruction("RCL \"A\"")
+        ],
+        public: true 
+    }
+]

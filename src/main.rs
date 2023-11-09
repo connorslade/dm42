@@ -13,7 +13,7 @@ fn main() -> Result<()> {
     let input = fs::read_to_string(INPUT)?;
     let tokens = Tokenizer::new(&input);
     let tokens = tokens.tokenize()?;
-    println!("{:#?}", tokens);
+    println!("{:?}", tokens);
 
     Ok(())
 }

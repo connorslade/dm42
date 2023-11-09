@@ -2,9 +2,11 @@
 
 Programs for the [Swissmicros DM42](https://www.swissmicros.com/product/dm42) and a preprocessor for creating them.
 
-## TODO
+## Example
 
-```
+This code that makes uses of function definitions, if statements and while loops is compiled down into plain hp 42s instructions.
+
+```cpp
 export def sort {
     if { MAT? } == { 0 } {
         "X is not a matrix", AVIEW
