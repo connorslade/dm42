@@ -1,0 +1,373 @@
+@ Statistics utility for the Swissmicros DM42
+@ Uses some free42 functions, so it will not work on the original 42s
+
+@@@ FEATURES @@@
+@ - Min, Max
+@ - Median
+@ - Mean
+@ - Standard Deviation
+@ - Q1, Q3
+@ - Range
+@ - Interquartile Range
+@ - Sum
+@ - Outlier fences
+
+@ MEAN, MEAN, STD, IQN, SUMMR
+@ RANGE, OUTLR, SUM, SUM^2, TSAM
+@ MIN, MAX, Q1, Q3
+
+@ Matrix sorting routine
+00 { 46-Byte Prgm }
+01 LBL "SORT"
+02 STO "A"
+03 INDEX "A"
+04 1
+05 1
+06 STOIJ
+07 DROPN 2
+08 LBL 00
+09 [MIN]
+10 DROP
+11 RCLIJ
+12 DROP
+13 R<>R
+14 DROPN 2
+15 I+
+16 FC? 76
+17 GTO 00
+18 RCL "A"
+19 END
+
+@ Main program
+00 { 395-Byte Prgm }
+01 LBL "STAT"
+@ Sort matix and store in A, leave original in X
+02 XEQ "SORT"
+03 DROP
+
+@ Menu page 1
+04 LBL 01
+05 CLMENU
+06 "MEAN"
+07 KEY 1 GTO 12
+08 "MEAD"
+09 KEY 2 GTO 14
+10 "STD"
+11 KEY 3 GTO 19
+12 "IQN"
+13 KEY 4 GTO 18
+14 "SUMMR"
+15 KEY 6 GTO 07
+16 KEY 8 GTO 02 @ Next Page
+17 KEY 9 GTO 09 @ Exit to custom menu
+18 MENU
+19 STOP
+20 RTN
+
+@ Meny page 2
+21 LBL 02
+22 CLMENU
+23 "RANGE"
+24 KEY 1 GTO 15
+25 "OUTLR"
+26 KEY 2 GTO 20
+27 "SUM"
+28 KEY 3 GTO 13
+29 "SUM↑2"
+30 KEY 4 GTO 21
+31 "TSAM"
+32 KEY 5 GTO 08
+33 KEY 7 GTO 01 @ Previous Page
+34 KEY 8 GTO 03 @ Next Page
+35 KEY 9 GTO 09 @ Exit to custom menu
+36 MENU
+37 STOP
+38 RTN
+
+@ Menu page 3
+39 LBL 03
+40 CLMENU
+41 "MIN"
+42 KEY 1 GTO 10
+43 "MAX"
+44 KEY 2 GTO 11
+45 "Q1"
+46 KEY 3 GTO 16
+47 "Q3"
+48 KEY 4 GTO 17
+49 KEY 7 GTO 02 @ Previous Page
+50 KEY 9 GTO 09 @ Exit to custom menu
+51 MENU
+52 STOP
+53 RTN
+
+@ 5-Var Summery
+@ Min, Q1, Median, Q3, Max
+54 LBL 07
+55 "MIN: "
+56 XEQ 10
+57 ARCL ST X
+58 DROP
+59 ⊢"␊"
+60 ⊢" Q1: "
+61 XEQ 16
+62 ARCL ST X
+63 DROP
+64 AVIEW
+65 STOP
+
+66 "Median: "
+67 XEQ 14
+68 ARCL ST X
+69 DROP
+70 AVIEW
+71 STOP
+
+72 " Q3: "
+73 XEQ 17
+74 ARCL ST X
+75 DROP
+76 ⊢"␊"
+77 ⊢"MAX: "
+78 XEQ 11
+79 ARCL ST X
+80 DROP
+81 AVIEW
+82 STOP
+83 RTN
+
+@ Toggle flag 05
+@ Unset - Sample
+@ Set - Population
+@ Currently just used in standard deviation
+84 LBL 08
+85 FS? 05
+86 GTO 35
+87 SF 05
+88 RTN
+
+@ Clears flag 05
+89 LBL 35
+90 CF 05
+91 RTN
+
+@ Exits to custom menu
+92 LBL 09
+93 SF 27
+94 RTN
+
+@ Min
+95 LBL 10
+96 XEQ 36 @ Reset indices
+97 [MIN]
+@ Drop Index
+98 X<>Y
+99 DROP
+100 RTN
+
+@ Max
+101 LBL 11
+102 XEQ 36 @ Reset indices
+103 [MAX]
+@ Drop Index
+104 X<>Y
+105 DROP
+106 RTN
+
+@ Sum
+107 LBL 13
+108 XEQ 36 @ Reset indices
+109 0
+110 LBL 30
+111 RCLEL
+112 +
+113 I+
+114 FC? 76 @ Has index not overflowed mat len?
+115 GTO 30
+116 RTN
+
+@ Mean
+117 LBL 12
+118 XEQ 13 @ Sum
+119 XEQ 37 @ Data Length
+120 ÷
+121 RTN
+
+@ Median
+122 LBL 14
+123 XEQ 37 @ Data Length
+@ (n+1)/2
+124 1
+125 +
+126 2
+127 ÷
+128 XEQ 31 @ Decimel index
+129 RTN
+
+@ Range
+130 LBL 15
+@ Max - Min
+131 XEQ 11
+132 XEQ 10
+133 -
+134 RTN
+
+@ Q1
+135 LBL 16
+136 XEQ 37
+@ (n+1)/4
+137 1
+138 +
+139 4
+140 ÷
+141 XEQ 31 @ Decimel index
+142 RTN
+
+@ Q3
+143 LBL 17
+144 XEQ 37
+@ 3(n+1)/4
+145 1
+146 +
+147 4
+148 ÷
+149 3
+150 ×
+151 XEQ 31 @ Decimel index
+152 RTN
+
+@ IQN
+153 LBL 18
+@ Q3 - Q1
+154 XEQ 17
+155 XEQ 16
+156 -
+157 RTN
+
+@ Standard Deviation
+158 LBL 19
+@ Store unmodified from A data in B
+@ Also put data on the stack
+159 RCL "A"
+160 STO "B"
+@ Squared difference from mean
+161 XEQ 12 @ Mean
+162 -
+163 X↑2
+@ Sum
+164 STO "A"
+165 XEQ 13
+@ Uses flag 05 to determine sample or population
+@ For population, devide by n
+@ For sample, devide by n-1
+166 XEQ 37
+167 XEQ 34
+168 ÷
+@ Square root
+169 SQRT
+@ Drop data matrix from stack
+170 X<>Y
+171 DROP
+@ Put clean data back in A
+172 RCL "B"
+173 STO "A"
+174 DROP
+175 RTN
+
+@ Outlier fences
+@ >Q3 + 1.5(IQN)
+@ <Q1 - 1.5(IQN)
+176 LBL 20
+177 XEQ 18 @ IQN
+178 1.5
+179 ×
+180 DUP
+@ Upper Fence
+181 XEQ 17 @ Q3
+182 +
+183 X<>Y
+@ Lower Fence
+184 XEQ 16 @ Q1
+185 X<>Y
+186 -
+187 RTN
+
+@ SUM↑2
+188 LBL 21
+189 XEQ 36 @ Reset indices
+190 0
+191 LBL 30
+192 RCLEL
+193 X↑2
+194 +
+195 I+
+196 FC? 76 @ Has index not overflowed mat len?
+197 GTO 30
+198 RTN
+
+@ Standard deviation internals
+@ Used to subtract 1 from n for sample mode
+199 LBL 34
+200 FS? 05
+201 RTN
+202 1
+203 -
+204 RTN
+
+@ Decimal index
+@ Used for median, Q1, Q3
+@ Will index into data with index provided by X
+@ If X is a decimal, will return the average of the two values surrounding the index, not weighted
+205 LBL 31
+206 DUP
+207 FP
+208 X≠0? @ If float portion is non-zero jmp 32
+209 GTO 32
+210 DROP @ Drop float portion
+211 XEQ 33 @ Index
+212 RTN
+
+@ Decimal index internals
+@ If float portion of index is non-zero
+213 LBL 32
+214 DROP @ Drop float portion
+215 IP @ Take integer portion
+216 DUP
+@ Index(X) + Index(X+1) / 2
+217 1
+218 +
+219 XEQ 33 @ Index
+220 X<>Y
+221 XEQ 33 @ Index
+222 +
+223 2
+224 ÷
+225 RTN
+
+@ Index into data
+@ Does not work with decimals
+226 LBL 33
+227 INDEX "A"
+228 1
+229 STOIJ @ X Val provided by caller
+230 DROPN 2
+231 RCLEL @ Index
+232 RTN
+
+@ Reset matrix indices to 1, 1
+233 LBL 36
+234 INDEX "A"
+235 1
+236 1
+237 STOIJ
+238 DROPN 2
+239 RTN
+
+@ Gets length of data
+240 LBL 37
+241 RCL "A"
+242 DIM?
+243 DROP @ Drop width
+244 RTN
+
+245 END
