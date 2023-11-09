@@ -34,11 +34,11 @@ export def sort {
 
 ## Todo
 
-- [ ] Finish parser / tokenizer
+- [x] Finish parser / tokenizer
   - [x] Base
   - [x] Functions
   - [x] If
-  - [ ] Raw-If
+  - [x] Raw-If
   - [x] While
 - [ ] Finish codegen
   - [ ] Functions
@@ -46,3 +46,4 @@ export def sort {
   - [ ] While loops
 - [ ] Future Ideas
   - [ ] For loops
+  - [ ] Decent error reporting

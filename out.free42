@@ -1,7 +1,16 @@
 LBL "inc"
+5
+X≥Y?
+GTO 02
+LBL 01
 XEQ 00
 RTN
 LBL 00
 1
 +
+RTN
+LBL 02
+DROP
+0
+GTO 01
 RTN

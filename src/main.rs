@@ -5,6 +5,7 @@ use tokenize::Tokenizer;
 
 mod codegen;
 mod ident;
+mod misc;
 mod token;
 mod tokenize;
 

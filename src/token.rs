@@ -46,6 +46,19 @@ pub enum Comparison {
     Lte,
 }
 
+impl Comparison {
+    pub fn instruction(&self) -> &str {
+        match self {
+            Comparison::Eq => "X=Y?",
+            Comparison::Ne => "X=Y?",
+            Comparison::Gt => "X>Y?",
+            Comparison::Lt => "X<Y?",
+            Comparison::Gte => "X≥Y?",
+            Comparison::Lte => "X≤Y?",
+        }
+    }
+}
+
 impl FromStr for Comparison {
     type Err = anyhow::Error;
 

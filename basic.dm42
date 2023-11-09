@@ -1,4 +1,9 @@
 export def inc {
+    if { } >= { 5 } {
+        DROP
+        0
+    }
+
     inc_inner()
 }
 

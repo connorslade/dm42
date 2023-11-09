@@ -1,6 +1,10 @@
-use std::collections::BTreeMap;
+use std::borrow::Cow;
 
-use crate::{ident::FreeIdent, token::Token};
+use crate::{
+    ident::FreeIdent,
+    misc::OrderedMap,
+    token::{Condition, Token},
+};
 
 #[derive(Debug)]
 struct Function {
@@ -12,14 +16,14 @@ struct Function {
 pub struct CodeGen {
     ident: FreeIdent,
     // name => instructions
-    functions: BTreeMap<String, Function>,
+    functions: OrderedMap<String, Function>,
 }
 
 impl CodeGen {
     pub fn new() -> Self {
         Self {
             ident: FreeIdent::new(),
-            functions: BTreeMap::new(),
+            functions: OrderedMap::new(),
         }
     }
 
@@ -60,7 +64,7 @@ pub fn generate(tokens: Vec<Token>) -> String {
 
     let mut out = String::new();
     for function in codegen.functions.values() {
-        out.push_str(&function.lbl());
+        out.push_str(&format!("LBL {}\n", function.ident()));
         for ins in &function.body {
             out.push_str(&format!("{}\n", ins));
         }
@@ -70,6 +74,8 @@ pub fn generate(tokens: Vec<Token>) -> String {
 }
 
 fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
+    let push_ins = |codegen: &mut CodeGen, x: String| codegen.get_function(&function).body.push(x);
+
     for token in tokens {
         match token {
             Token::Function { name, body, .. } => {
@@ -77,15 +83,70 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                 _generate(codegen, body, name);
             }
             Token::FunctionCall { name } => {
-                let ident = &codegen.get_function(&name).name;
-                let ins = format!("XEQ {ident}");
+                let ins = format!("XEQ {}", codegen.get_function(&name).ident());
                 codegen.get_function(&function).body.push(ins);
             }
             Token::If {
                 condition,
                 body,
                 else_body,
-            } => todo!(),
+            } => {
+                if body.is_empty() && else_body.is_empty() {
+                    continue;
+                }
+
+                match condition {
+                    Condition::Comparison { a, b, comparison } => {
+                        _generate(codegen, a, function.clone());
+                        _generate(codegen, b, function.clone());
+                        codegen
+                            .get_function(&function)
+                            .body
+                            .push(comparison.instruction().to_owned());
+                    }
+                    Condition::Raw { body } => {
+                        _generate(codegen, body, function.clone());
+                    }
+                };
+
+                let end_label = codegen.new_ident();
+
+                // Create true branch
+                if !body.is_empty() {
+                    let true_label = codegen.new_ident();
+                    push_ins(codegen, format!("GTO {true_label}"));
+
+                    codegen.functions.insert(
+                        true_label.clone(),
+                        Function::new_private(true_label.clone()),
+                    );
+                    _generate(codegen, body, true_label.clone());
+                    codegen
+                        .get_function(&true_label)
+                        .body
+                        .push(format!("GTO {end_label}"));
+                } else {
+                    push_ins(codegen, format!("NOP"));
+                }
+
+                // Create false branch
+                if !else_body.is_empty() {
+                    let false_label = codegen.new_ident();
+                    push_ins(codegen, format!("GTO {false_label}"));
+
+                    codegen.functions.insert(
+                        false_label.clone(),
+                        Function::new_private(false_label.clone()),
+                    );
+                    _generate(codegen, else_body, false_label.clone());
+                    codegen
+                        .get_function(&false_label)
+                        .body
+                        .push(format!("GTO {end_label}"));
+                }
+
+                push_ins(codegen, format!("LBL {end_label}"));
+            }
             Token::While { condition, body } => todo!(),
             Token::Instruction(ins) => codegen.get_function(&function).body.push(ins),
         }
@@ -93,11 +154,23 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
 }
 
 impl Function {
-    fn lbl(&self) -> String {
+    fn new_private(name: String) -> Self {
+        Self {
+            name,
+            body: Vec::new(),
+            public: false,
+        }
+    }
+
+    fn ins(&mut self, ins: String) {
+        self.body.push(ins);
+    }
+
+    fn ident(&self) -> Cow<'_, str> {
         if self.public {
-            format!("LBL \"{}\"\n", self.name)
+            Cow::Owned(format!("\"{}\"", self.name))
         } else {
-            format!("LBL {}\n", self.name)
+            Cow::Borrowed(&self.name)
         }
     }
 }
