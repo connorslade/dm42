@@ -1,5 +1,5 @@
 export def inc {
-    if { } >= { 5 } {
+    if { DUP } >= { 5 } {
         DROP
         0
     }

@@ -57,6 +57,17 @@ impl Comparison {
             Comparison::Lte => "X≤Y?",
         }
     }
+
+    pub fn swap_xy(&self) -> Self {
+        match self {
+            Comparison::Eq => Comparison::Eq,
+            Comparison::Ne => Comparison::Ne,
+            Comparison::Gt => Comparison::Lt,
+            Comparison::Lt => Comparison::Gt,
+            Comparison::Gte => Comparison::Lte,
+            Comparison::Lte => Comparison::Gte,
+        }
+    }
 }
 
 impl FromStr for Comparison {

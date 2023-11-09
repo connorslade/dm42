@@ -102,7 +102,7 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                         codegen
                             .get_function(&function)
                             .body
-                            .push(comparison.instruction().to_owned());
+                            .push(comparison.swap_xy().instruction().to_owned());
                     }
                     Condition::Raw { body } => {
                         _generate(codegen, body, function.clone());
@@ -116,10 +116,9 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                     let true_label = codegen.new_ident();
                     push_ins(codegen, format!("GTO {true_label}"));
 
-                    codegen.functions.insert(
-                        true_label.clone(),
-                        Function::new_private(true_label.clone()),
-                    );
+                    let mut fun = Function::new_private(true_label.clone());
+                    fun.ins("DROPN 2".to_owned());
+                    codegen.functions.insert(true_label.clone(), fun);
                     _generate(codegen, body, true_label.clone());
                     codegen
                         .get_function(&true_label)
@@ -134,15 +133,16 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                     let false_label = codegen.new_ident();
                     push_ins(codegen, format!("GTO {false_label}"));
 
-                    codegen.functions.insert(
-                        false_label.clone(),
-                        Function::new_private(false_label.clone()),
-                    );
+                    let mut fun = Function::new_private(false_label.clone());
+                    fun.ins("DROPN 2".to_owned());
+                    codegen.functions.insert(false_label.clone(), fun);
                     _generate(codegen, else_body, false_label.clone());
                     codegen
                         .get_function(&false_label)
                         .body
                         .push(format!("GTO {end_label}"));
+                } else {
+                    push_ins(codegen, format!("DROPN 2"));
                 }
 
                 push_ins(codegen, format!("LBL {end_label}"));
