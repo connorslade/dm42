@@ -160,21 +160,23 @@ impl Tokenizer {
         Ok(body)
     }
 
-    // { MAT? } == { 0 }
+    // { TYPE? } == { 3 }
+    // { MAT? }
     fn tokenize_condition(&mut self) -> Result<Condition> {
         let a = self.tokenize_block()?;
         self.skip_whitespace();
-        let comp = self
+
+        if self.peek_ptn(b"{") {
+            return Ok(Condition::Raw { body: a });
+        }
+
+        let comparison = self
             .next_str()?
             .parse::<Comparison>()
             .with_context(|| format!("On line {}", self.line))?;
         let b = self.tokenize_block()?;
 
-        Ok(Condition {
-            a,
-            b,
-            comparison: comp,
-        })
+        Ok(Condition::Comparison { a, b, comparison })
     }
 
     fn tokenize_if(&mut self) -> Result<Token> {
@@ -184,7 +186,8 @@ impl Tokenizer {
         let condition = self.tokenize_condition()?;
         let body = self.tokenize_block()?;
 
-        let else_body = if self.peek_ptn(b"else") {
+        self.skip_whitespace();
+        let else_body = if self.match_ptn(b"else") {
             self.tokenize_block()?
         } else {
             Vec::new()

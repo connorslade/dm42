@@ -8,14 +8,15 @@ mod ident;
 mod token;
 mod tokenize;
 
-const INPUT: &str = "test.dm42";
+const INPUT: &str = "basic.dm42";
 const OUTPUT: &str = "out.free42";
 
 fn main() -> Result<()> {
     let input = fs::read_to_string(INPUT)?;
-    let tokens = Tokenizer::new(&input);
-    let tokens = tokens.tokenize()?;
-    println!("{:?}", tokens);
+    let tokens = Tokenizer::new(&input).tokenize()?;
+    println!("{:#?}", tokens);
+    let output = codegen::generate(tokens);
+    fs::write(OUTPUT, output)?;
 
     Ok(())
 }

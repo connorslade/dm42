@@ -1,0 +1,7 @@
+export def inc {
+    inc_inner()
+}
+
+def inc_inner {
+    1, +
+}

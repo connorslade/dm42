@@ -1,0 +1,7 @@
+LBL "inc"
+XEQ 00
+RTN
+LBL 00
+1
++
+RTN

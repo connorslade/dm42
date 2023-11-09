@@ -25,16 +25,21 @@ pub enum Token {
 }
 
 #[derive(Debug)]
-pub struct Condition {
-    pub a: Vec<Token>,
-    pub b: Vec<Token>,
-    pub comparison: Comparison,
+pub enum Condition {
+    Comparison {
+        a: Vec<Token>,
+        b: Vec<Token>,
+        comparison: Comparison,
+    },
+    Raw {
+        body: Vec<Token>,
+    },
 }
 
 #[derive(Debug)]
 pub enum Comparison {
     Eq,
-    Neq,
+    Ne,
     Gt,
     Lt,
     Gte,
@@ -47,7 +52,7 @@ impl FromStr for Comparison {
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
         Ok(match s {
             "==" => Comparison::Eq,
-            "!=" => Comparison::Neq,
+            "!=" => Comparison::Ne,
             ">" => Comparison::Gt,
             "<" => Comparison::Lt,
             ">=" => Comparison::Gte,

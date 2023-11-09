@@ -31,3 +31,18 @@ export def sort {
     RCL "A"
 }
 ```
+
+## Todo
+
+- [ ] Finish parser / tokenizer
+  - [x] Base
+  - [x] Functions
+  - [x] If
+  - [ ] Raw-If
+  - [x] While
+- [ ] Finish codegen
+  - [ ] Functions
+  - [ ] If-statements
+  - [ ] While loops
+- [ ] Future Ideas
+  - [ ] For loops

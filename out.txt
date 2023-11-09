@@ -1,0 +1,45 @@
+LBL "sort"
+DUP
+TYPE?
+3
+X=Y?
+GTO 02
+GTO 01
+LBL 03
+
+STO "A"
+INDEX "A"
+1
+1
+STOIJ
+DROPN 2
+
+LBL 04
+[MIN]
+DROP
+RCLIJ
+DROP
+R<>R
+DROPN 2
+I+
+
+FS? 76
+GTO 05
+
+RCL "A"
+RTN
+
+LBL 01
+DROPN 2
+"X is not a matrix"
+AVIEW
+STOP
+GTO 03
+
+LBL 02
+DROPN 2
+GTO 03
+
+LBL 05
+DROPN 2
+GTO 04
