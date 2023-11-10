@@ -8,7 +8,7 @@ This code that makes uses of function definitions, if statements and while loops
 
 ```cpp
 export def sort {
-    if { MAT? } {} else {
+    if { MAT? } else {
         "X is not a matrix", AVIEW
         STOP
     }
@@ -29,6 +29,37 @@ export def sort {
     }
 
     RCL "A"
+}
+```
+
+## Documentation
+
+This is for when I inevitability forget all of this syntax that I totally put so much thought into.
+Anyway, there are currently four things added by this transpiler / preprocessor, Functions, Function calls, If statements, and While (or Do-while) loops.
+Below are some examples of each.
+
+```cpp
+// Zeros out the X reg by repeatedly subtracting 1
+// Because the function is being exported, it will be globally accessibly (in the EXQ menu)
+export def zero {
+    // Each block here must return one value by putting it in X
+    // The value will be dropped before any other user code is run
+    // To use a do-while loop, one must simple replace "while" with "do while"
+    while { DUP } > { 0 } {
+        // This expands to "1\n"
+        1, -
+    }
+}
+
+export def cmat {
+    // This kind of condition without the comparison lets you bring your own instruction to selectively execute the following instruction
+    // Also notice the missing then case, this was done to basically invert the result of MAT?
+    if { MAT? } else {
+        "X is not a matrix", AVIEW
+        // Calls the "zero" function from above
+        zero()
+        STOP
+    }
 }
 ```
 

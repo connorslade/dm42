@@ -2,7 +2,7 @@
 ///
 /// 00-99, A-J, a-e
 pub struct FreeIdent {
-    idx: u8,
+    pub idx: u8,
 }
 
 impl FreeIdent {

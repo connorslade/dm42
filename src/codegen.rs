@@ -27,6 +27,18 @@ impl CodeGen {
         }
     }
 
+    pub fn used_functions(&self) -> usize {
+        self.functions.len()
+    }
+
+    pub fn used_instructions(&self) -> usize {
+        self.functions.values().map(|f| f.body.len()).sum::<usize>()
+    }
+
+    pub fn used_identifiers(&self) -> usize {
+        self.ident.idx as usize
+    }
+
     fn get_function(&mut self, name: &str) -> &mut Function {
         self.functions.get_mut(name).expect("Function not found")
     }
@@ -36,9 +48,7 @@ impl CodeGen {
     }
 }
 
-pub fn generate(tokens: Vec<Token>) -> String {
-    let mut codegen = CodeGen::new();
-
+pub fn generate(codegen: &mut CodeGen, tokens: Vec<Token>) -> String {
     // Add root functions to codegen
     for func in &tokens {
         if let Token::Function { name, public, .. } = func {
@@ -57,10 +67,8 @@ pub fn generate(tokens: Vec<Token>) -> String {
             );
         }
     }
-    dbg!(&codegen.functions);
 
-    _generate(&mut codegen, tokens, "<root>".to_owned());
-    dbg!(&codegen.functions);
+    _generate(codegen, tokens, "<root>".to_owned());
 
     let mut out = String::new();
     for function in codegen.functions.values() {
