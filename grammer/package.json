@@ -1,7 +1,12 @@
 {
   "name": "dm42",
   "displayName": "dm42",
-  "description": "",
+  "description": "Language grammar for my language thing that transpiles to free42 instructions.",
+  "publisher": "connorslade",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Basicprogrammer10/dm42"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.79.0"

@@ -1,6 +1,6 @@
 # dm42 [![Build](https://github.com/Basicprogrammer10/dm42/actions/workflows/rust.yml/badge.svg)](https://github.com/Basicprogrammer10/dm42/actions/workflows/rust.yml)
 
-Programs for the [Swissmicros DM42](https://www.swissmicros.com/product/dm42) and a preprocessor / transpiler for creating them.
+Various programs for the [Swissmicros DM42](https://www.swissmicros.com/product/dm42) and a preprocessor / transpiler for creating them.
 
 ## Programs
 
@@ -9,9 +9,10 @@ Programs for the [Swissmicros DM42](https://www.swissmicros.com/product/dm42) an
 - [Physical Constants](bin#physical-constants) &mdash; Lets you push various physical constants onto the stack
 - [Matrix Sorter](bin#matrix-sorter) &mdash; Sorts a matrix column, used in the statistics program
 
-## Example
+## Preprocessor
 
-This code that makes uses of function definitions, if statements and while loops is compiled down into plain hp 42s instructions.
+This code makes uses of function definitions, if statements, and while loops and can be compiled down into plain 42s instructions.
+If you decide to work with this language and use vs code, consider installing the [language grammars](grammer) for pretty syntax highlighting.
 
 ```cpp
 export def sort {

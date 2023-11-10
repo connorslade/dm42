@@ -57,66 +57,20 @@ To use, have the value you want to convert in the X reg, run the program, select
 Clicking multiple units at this point will continue converting the original value into new units.
 To convert a new value exit the menu and re-select a dimension and select a new from unit.
 
-Currently the units is supports are as follows.
+Currently the units it supports are as follows:
 
-- Length
-  - Meter
-  - Inch
-  - Foot
-  - Yard
-  - Mile
-  - Nautical Mile
-- Mass
-  - kilogram
-  - pound
-  - tonne
-- Speed
-  - Meters per second
-  - Kilometers per hour
-  - Miles per hour
-  - Knot
-- Acceleration
-  - Meters per second squared
-  - Gravity
-- Force
-  - newton
-  - pound force
-- Energy
-  - Joule
-  - Calorie
-  - Kilowatt hour
-  - Electronvolt
-- Area
-  - Square meter
-  - Square inch
-  - Square foot
-  - Square yard
-  - Square mile
-- Volume
-  - Cubic meter
-  - Cubic inch
-  - Cubic foot
-- Time
-  - Second
-  - Minute
-  - Hour
-  - Day
-  - Julian year
-- Bytes
-  - Byte
-  - Kilobyte
-  - Megabyte
-  - Gigabyte
-  - Terabyte
-  - Petabyte
-- Pressure
-  - Pascal
-  - Bar
-  - Atmosphere
-  - Pounds per square inch
-- Power
-  - Watt
-  - Horsepower
+- **Length**: Meter, Inch, Foot, Yard, Mile, Nautical Mile
+- **Mass**: Kilogram, Pound, Tonne
+- **Speed**: Meters per second, Kilometers per hour, Miles per hour, Knot
+- **Acceleration**: Meters per second squared, Gravity
+- **Force**: Newton, Pound force
+- **Energy**: Joule, Calorie, Kilowatt hour, Electronvolt
+- **Area**: Square meter, Square inch, Square foot, Square yard, Square mile
+- **Volume**: Cubic meter, Cubic inch, Cubic foot
+- **Time**: Second, Minute, Hour, Day, Julian year
+- **Bytes**: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte
+- **Pressure**: Pascal, Bar, Atmosphere, Pounds per square inch
+- **Power**: Watt, Horsepower
 
 ## Physical Constants
 
