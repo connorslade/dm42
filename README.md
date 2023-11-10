@@ -8,9 +8,9 @@ This code that makes uses of function definitions, if statements and while loops
 
 ```cpp
 export def sort {
-    if { MAT? } == { 0 } {
+    if { MAT? } {} else {
         "X is not a matrix", AVIEW
-        RTN
+        STOP
     }
 
     STO "A"
@@ -18,7 +18,7 @@ export def sort {
     1, 1, STOIJ
     DROPN 2
 
-    while { FC? 76 } == { 1 } {
+    while { FC? 76 } {
         [MIN]
         DROP
         RCLIJ

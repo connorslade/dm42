@@ -166,7 +166,8 @@ impl Tokenizer {
         let a = self.tokenize_block()?;
         self.skip_whitespace();
 
-        if self.peek_ptn(b"{") {
+        let next = self.chars[self.idx];
+        if !['>', '='].contains(&next) || next == '{' {
             return Ok(Condition::Raw { body: a });
         }
 
@@ -184,7 +185,11 @@ impl Tokenizer {
         self.take(b"if")?;
 
         let condition = self.tokenize_condition()?;
-        let body = self.tokenize_block()?;
+        let body = if self.peek_ptn(b"else") {
+            Vec::new()
+        } else {
+            self.tokenize_block()?
+        };
 
         self.skip_whitespace();
         let else_body = if self.match_ptn(b"else") {
