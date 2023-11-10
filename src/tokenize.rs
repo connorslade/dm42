@@ -137,7 +137,7 @@ impl Tokenizer {
             self.skip_whitespace();
             if self.peek_ptn(b"if") {
                 body.push(self.tokenize_if()?);
-            } else if self.peek_ptn(b"while") {
+            } else if self.peek_ptn(b"while") || self.peek_ptn(b"do") {
                 body.push(self.tokenize_while()?);
             } else if self.match_ptn(b"}") {
                 break;
@@ -202,11 +202,17 @@ impl Tokenizer {
 
     fn tokenize_while(&mut self) -> Result<Token> {
         self.skip_whitespace();
+        let do_while = self.match_ptn(b"do");
+        self.skip_whitespace();
         self.take(b"while")?;
 
         let condition = self.tokenize_condition()?;
         let body = self.tokenize_block()?;
-        Ok(Token::While { condition, body })
+        Ok(Token::While {
+            condition,
+            body,
+            do_while,
+        })
     }
 }
 

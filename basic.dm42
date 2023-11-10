@@ -1,12 +1,5 @@
-export def inc {
-    if { DUP } >= { 5 } {
-        DROP
-        0
+export def zero {
+    while { DUP } > { 0 } {
+        1, -
     }
-
-    inc_inner()
-}
-
-def inc_inner {
-    1, +
 }

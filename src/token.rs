@@ -20,6 +20,7 @@ pub enum Token {
     While {
         condition: Condition,
         body: Vec<Token>,
+        do_while: bool,
     },
     Instruction(String),
 }

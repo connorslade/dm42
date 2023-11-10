@@ -94,21 +94,7 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                 if body.is_empty() && else_body.is_empty() {
                     continue;
                 }
-
-                match condition {
-                    Condition::Comparison { a, b, comparison } => {
-                        _generate(codegen, a, function.clone());
-                        _generate(codegen, b, function.clone());
-                        codegen
-                            .get_function(&function)
-                            .body
-                            .push(comparison.swap_xy().instruction().to_owned());
-                    }
-                    Condition::Raw { body } => {
-                        _generate(codegen, body, function.clone());
-                    }
-                };
-
+                gen_condition(codegen, condition, function.clone());
                 let end_label = codegen.new_ident();
 
                 // Create true branch
@@ -125,7 +111,7 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                         .body
                         .push(format!("GTO {end_label}"));
                 } else {
-                    push_ins(codegen, format!("NOP"));
+                    push_ins(codegen, "NOP".to_owned());
                 }
 
                 // Create false branch
@@ -142,15 +128,53 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                         .body
                         .push(format!("GTO {end_label}"));
                 } else {
-                    push_ins(codegen, format!("DROPN 2"));
+                    push_ins(codegen, "DROPN 2".to_owned());
                 }
 
                 push_ins(codegen, format!("LBL {end_label}"));
             }
-            Token::While { condition, body } => todo!(),
+            Token::While {
+                condition,
+                body,
+                do_while,
+            } => {
+                let loop_start = codegen.new_ident();
+                let loop_condition = codegen.new_ident();
+                if !do_while {
+                    push_ins(codegen, format!("GTO {loop_condition}"));
+                } else {
+                    push_ins(codegen, "0".to_string());
+                    push_ins(codegen, "0".to_string());
+                }
+                push_ins(codegen, format!("LBL {loop_start}"));
+                push_ins(codegen, "DROPN 2".to_owned());
+                _generate(codegen, body, function.clone());
+                if !do_while {
+                    push_ins(codegen, format!("LBL {loop_condition}"));
+                }
+                gen_condition(codegen, condition, function.clone());
+                push_ins(codegen, format!("GTO {loop_start}"));
+                push_ins(codegen, "DROPN 2".to_owned());
+            }
             Token::Instruction(ins) => codegen.get_function(&function).body.push(ins),
         }
     }
+}
+
+fn gen_condition(codegen: &mut CodeGen, condition: Condition, function: String) {
+    match condition {
+        Condition::Comparison { a, b, comparison } => {
+            _generate(codegen, a, function.clone());
+            _generate(codegen, b, function.clone());
+            codegen
+                .get_function(&function)
+                .body
+                .push(comparison.swap_xy().instruction().to_owned());
+        }
+        Condition::Raw { body } => {
+            _generate(codegen, body, function.clone());
+        }
+    };
 }
 
 impl Function {

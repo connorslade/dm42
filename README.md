@@ -41,9 +41,10 @@ export def sort {
   - [x] Raw-If
   - [x] While
 - [ ] Finish codegen
-  - [ ] Functions
-  - [ ] If-statements
+  - [x] Functions
+  - [x] If-statements
   - [ ] While loops
 - [ ] Future Ideas
   - [ ] For loops
   - [ ] Decent error reporting
+  - [ ] Inline functions
