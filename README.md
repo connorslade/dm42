@@ -1,6 +1,13 @@
 # dm42 [![Build](https://github.com/Basicprogrammer10/dm42/actions/workflows/rust.yml/badge.svg)](https://github.com/Basicprogrammer10/dm42/actions/workflows/rust.yml)
 
-Programs for the [Swissmicros DM42](https://www.swissmicros.com/product/dm42) and a preprocessor for creating them.
+Programs for the [Swissmicros DM42](https://www.swissmicros.com/product/dm42) and a preprocessor / transpiler for creating them.
+
+## Programs
+
+- [Statistics](bin#statistics) &mdash; Various statistics functions for use on N×1 matrices
+- [Unit converter](bin#unit-converter) &mdash; A simple unit convertor
+- [Physical Constants](bin#physical-constants) &mdash; Lets you push various physical constants onto the stack
+- [Matrix Sorter](bin#matrix-sorter) &mdash; Sorts a matrix column, used in the statistics program
 
 ## Example
 

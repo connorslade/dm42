@@ -5,7 +5,7 @@
 // - Length
 // - Mass
 // - Speed
-// - Acceleatation
+// - Acceleration
 // - Force
 // - Energy
 // - Area
@@ -22,7 +22,7 @@ export def conv {
     "leng",  KEY 1 GTO length
     "mass",  KEY 2 GTO mass
     "speed", KEY 3 GTO speed
-    "accel", KEY 4 GTO acceleatation
+    "accel", KEY 4 GTO acceleration
     "force", KEY 5 GTO force
     "energ", KEY 6 GTO energy
     KEY 8 GTO page_2
@@ -128,13 +128,13 @@ def kilometer_per_hour { 0.277777778 }
 def mile_per_hour { 0.44704 }
 def knot { 0.514444444 }
 
-// == Acceleatation ==
-def acceleatation {
+// == Acceleration ==
+def acceleration {
     CLMENU
     "M/S↑2", KEY 1 XEQ meter_per_second_squared
     "G",     KEY 2 XEQ gravity
     convert()
-    GTO acceleatation
+    GTO acceleration
 }
 
 def meter_per_second_squared { 1 }
