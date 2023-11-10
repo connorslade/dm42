@@ -1,0 +1,262 @@
+// Basic unit converter
+// Flag 3 - Exit to custom menu
+//
+// - Length
+// - Mass
+// - Speed
+// - Acceleatation
+// - Force
+// - Energy
+// - Area
+// - Volume
+// - Time
+// - Bytes
+// - Pressure
+// - Power
+
+// Flag 81 marks if the user has selected a unit and its value is stored in A
+export def conv {
+    CF 81
+    CLMENU
+    "leng",  KEY 1 GTO length
+    "mass",  KEY 2 GTO mass
+    "speed", KEY 3 GTO speed
+    "accel", KEY 4 GTO acceleatation
+    "force", KEY 5 GTO force
+    "energ", KEY 6 GTO energy
+    KEY 8 GTO page_2
+    menu()
+}
+
+def page_2 {
+    CLMENU
+    "area",  KEY 1 GTO area
+    "vol",   KEY 2 GTO volume
+    "time",  KEY 3 GTO time
+    "bytes", KEY 4 GTO bytes
+    "press", KEY 5 GTO pressure
+    "power", KEY 6 GTO power
+    KEY 7 GTO conv
+    menu()
+}
+
+def menu {
+    if { FS? 03 } {
+        KEY 9 GTO custom_menu
+    }
+    MENU
+    STOP
+}
+
+def custom_menu {
+    SF 27
+    STOP
+}
+
+def convert {
+    KEY 9 GTO conv
+    MENU, STOP
+
+    if { FC? 81 } {
+        // Convert Y into base unit with X as the conversion factor
+        X<>Y
+        STO "A"
+        X<>Y
+        STO* "A"
+        DROP
+        SF 81
+    } else {
+        // Convert "A" into X with X as the conversion factor
+        1/X
+        RCL "A"
+        *
+    }
+}
+
+// == LENGTH ==
+
+// Meter is base
+def length {
+    CLMENU
+    "M",   KEY 1 XEQ meter
+    "in",  KEY 2 XEQ inch
+    "ft",  KEY 3 XEQ foot
+    "yd",  KEY 4 XEQ yard
+    "mi",  KEY 5 XEQ mile
+    "nmi", KEY 6 XEQ nautical_mile
+    convert()
+    GTO length
+}
+
+// X => Meter
+def meter { 1 }
+def inch { 0.0254 }
+def foot { 0.3048 }
+def yard { 0.9144 }
+def mile { 1609.344 }
+def nautical_mile { 1852 }
+
+// == MASS ==
+def mass {
+    CLMENU
+    "kg",    KEY 1 XEQ kilogram
+    "lb",    KEY 2 XEQ pound
+    "tonn",  KEY 3 XEQ tonne
+    convert()
+    GTO mass
+}
+
+def kilogram { 1 }
+def pound { 0.45359237 }
+def tonne { 1000 }
+
+// == SPEED ==
+def speed {
+    CLMENU
+    "M/S",  KEY 1 XEQ meter_per_second
+    "KPH",  KEY 2 XEQ kilometer_per_hour
+    "MPH",  KEY 3 XEQ mile_per_hour
+    "KNOT", KEY 4 XEQ knot
+    convert()
+    GTO speed
+}
+
+def meter_per_second { 1 }
+def kilometer_per_hour { 0.277777778 }
+def mile_per_hour { 0.44704 }
+def knot { 0.514444444 }
+
+// == Acceleatation ==
+def acceleatation {
+    CLMENU
+    "M/S↑2", KEY 1 XEQ meter_per_second_squared
+    "G",     KEY 2 XEQ gravity
+    convert()
+}
+
+def meter_per_second_squared { 1 }
+def gravity { 9.80665 }
+
+// == Force ==
+def force {
+    CLMENU
+    "N",   KEY 1 XEQ newton
+    "lbf", KEY 2 XEQ pound_force
+    convert()
+}
+
+def newton { 1 }
+def pound_force { 4.4482216152605 }
+
+// == Energy ==
+def energy {
+    CLMENU
+    "J",   KEY 1 XEQ joule
+    "cal", KEY 2 XEQ calorie
+    "kWh", KEY 3 XEQ kilowatt_hour
+    "eV",  KEY 4 XEQ electronvolt
+    convert()
+    GTO energy
+}
+
+def joule { 1 }
+def calorie { 4.184 }
+def kilowatt_hour { 3600000 }
+def electronvolt { 1.602176565e-19 }
+
+// == Area ==
+def area {
+    CLMENU
+    "m↑2",  KEY 1 XEQ square_meter
+    "in↑2", KEY 2 XEQ square_inch
+    "ft↑2", KEY 3 XEQ square_foot
+    "yd↑2", KEY 4 XEQ square_yard
+    "mi↑2", KEY 5 XEQ square_mile
+    convert()
+    GTO area
+}
+
+def square_meter { 1 }
+def square_inch { 0.00064516 }
+def square_foot { 0.09290304 }
+def square_yard { 0.83612736 }
+def square_mile { 2589988.110336 }
+
+// == Volume ==
+def volume {
+    CLMENU
+    "m↑3",  KEY 1 XEQ cubic_meter
+    "in↑3", KEY 2 XEQ cubic_inch
+    "ft↑3", KEY 3 XEQ cubic_foot
+    convert()
+    GTO volume
+}
+
+def cubic_meter { 1 }
+def cubic_inch { 0.000016387064 }
+def cubic_foot { 0.028316846592 }
+
+// == Time ==
+def time {
+    CLMENU
+    "s",   KEY 1 XEQ second
+    "min", KEY 2 XEQ minute
+    "hr",  KEY 3 XEQ hour
+    "day", KEY 4 XEQ day
+    "jyr", KEY 5 XEQ julian_year
+    convert()
+}
+
+def second { 1 }
+def minute { 60 }
+def hour { 3600 }
+def day { 86400 }
+def julian_year { 31557600 }
+
+// == Bytes ==
+def bytes {
+    CLMENU
+    "B",   KEY 1 XEQ byte
+    "KB",  KEY 2 XEQ kilobyte
+    "MB",  KEY 3 XEQ megabyte
+    "GB",  KEY 4 XEQ gigabyte
+    "TB",  KEY 5 XEQ terabyte
+    "PB",  KEY 6 XEQ petabyte
+    convert()
+    GTO bytes
+}
+
+def byte { 1 }
+def kilobyte { 1024 }
+def megabyte { 1048576 }
+def gigabyte { 1073741824 }
+def terabyte { 1099511627776 }
+def petabyte { 1125899906842624 }
+
+// == Pressure ==
+def pressure {
+    CLMENU
+    "Pa",  KEY 1 XEQ pascal
+    "bar", KEY 2 XEQ bar
+    "atm", KEY 3 XEQ atmosphere
+    "psi", KEY 4 XEQ pound_per_square_inch
+    convert()
+    GTO pressure
+}
+
+def pascal { 1 }
+def bar { 100000 }
+def atmosphere { 101325 }
+def pound_per_square_inch { 6894.757293168361 }
+
+// == Power ==
+def power {
+    CLMENU
+    "W",   KEY 1 XEQ watt
+    "hp",  KEY 2 XEQ horsepower
+    convert()
+    GTO power
+}
+
+def watt { 1 }
+def horsepower { 745.69987158227022 }

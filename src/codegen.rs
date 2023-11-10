@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use regex::Regex;
+use fancy_regex::Regex;
 
 use crate::{
     ident::FreeIdent,
@@ -184,7 +184,7 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
 fn transform_instruction(codegen: &mut CodeGen, mut ins: String) -> String {
     // Todo, clean this up
     for (name, func) in codegen.functions.iter() {
-        let regex = Regex::new(&format!("\\b{name}\\b")).unwrap();
+        let regex = Regex::new(&format!("\\b(?!\"){name}(?!\")\\b")).unwrap();
         ins = regex
             .replace(&ins, format!("{}", func.ident()))
             .into_owned();

@@ -89,3 +89,4 @@ export def cmat {
   - [ ] Automatically cut strings
   - [ ] Figure out reusing functions across exported functions
   - [x] Comments
+  - [ ] Anonyms functions

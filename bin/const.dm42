@@ -7,7 +7,20 @@ export def const {
     "h",   KEY 2 GTO planck_constant
     "e",   KEY 3 GTO elementary_charge
     "N↓A", KEY 4 GTO avogadro_constant
-    // KEY 8 GTO page_2
+    "V↓C", KEY 5 GTO cesium_hyperfine_transition 
+    "k",   KEY 6 GTO boltzmann_constant
+    KEY 8 GTO page_2
+    menu()
+}
+
+def page_2 {
+    CLMENU
+    "K↓cd", KEY 1 GTO luminous_efficacy
+    KEY 7 GTO const
+    menu()
+}
+
+def menu {
     if { FS? 03 } {
         KEY 9 GTO custom_menu
     }
@@ -15,9 +28,7 @@ export def const {
     STOP
 }
 
-def custom_menu {
-    SF 27
-}
+def custom_menu { SF 27 }
 
 // == CONSTANTS ==
 
@@ -25,3 +36,6 @@ def light_speed { 299792458 }
 def planck_constant { 6.62607015e-34 }
 def elementary_charge { 1.602176634e-19 }
 def avogadro_constant { 6.02214076e23 }
+def cesium_hyperfine_transition { 9192631770 }
+def boltzmann_constant { 1.380649e-23 } 
+def luminous_efficacy { 683 }
