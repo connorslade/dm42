@@ -71,7 +71,7 @@ export def cmat {
   - [x] If
   - [x] Raw-If
   - [x] While
-  - [ ] Do While
+  - [x] Do While
 - [x] Finish codegen
   - [x] Functions
   - [x] If-statements
@@ -85,5 +85,7 @@ export def cmat {
   - [ ] Basic documentation
   - [ ] Macros
   - [ ] Imports
-  - [ ] CLI
-  - [ ] Automatically cut string
+  - [x] CLI
+  - [ ] Automatically cut strings
+  - [ ] Figure out reusing functions across exported functions
+  - [x] Comments

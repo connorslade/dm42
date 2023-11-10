@@ -1,3 +1,4 @@
+// Sorts a matrix in ascending order
 export def sort {
     if { MAT? } else {
         "X is not a matrix", AVIEW

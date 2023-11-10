@@ -4,6 +4,8 @@ use anyhow::{bail, Context, Result};
 
 use crate::token::{Comparison, Condition, Token};
 
+const COMMENT_CHARS: &[char] = &['#', ';', '@'];
+
 pub struct Tokenizer {
     chars: Vec<char>,
     idx: usize,
@@ -44,6 +46,14 @@ impl Tokenizer {
             if self.idx >= self.chars.len() {
                 break;
             }
+        }
+
+        // Comments
+        if self.idx + 2 < self.chars.len() && &self.chars[self.idx..self.idx + 2] == &['/', '/'] {
+            while self.chars[self.idx] != '\n' {
+                self.idx += 1;
+            }
+            self.skip_whitespace();
         }
     }
 
