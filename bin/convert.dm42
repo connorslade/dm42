@@ -1,5 +1,6 @@
 // Basic unit converter
 // Flag 3 - Exit to custom menu
+// Flag 2 - Keep old value in Y
 //
 // - Length
 // - Mass
@@ -64,6 +65,7 @@ def convert {
         X<>Y
         STO* "A"
         DROP
+        if { FC? 02 } { DROP }
         SF 81
     } else {
         // Convert "A" into X with X as the conversion factor
@@ -132,6 +134,7 @@ def acceleatation {
     "M/S↑2", KEY 1 XEQ meter_per_second_squared
     "G",     KEY 2 XEQ gravity
     convert()
+    GTO acceleatation
 }
 
 def meter_per_second_squared { 1 }
@@ -143,6 +146,7 @@ def force {
     "N",   KEY 1 XEQ newton
     "lbf", KEY 2 XEQ pound_force
     convert()
+    GTO force
 }
 
 def newton { 1 }
@@ -205,6 +209,7 @@ def time {
     "day", KEY 4 XEQ day
     "jyr", KEY 5 XEQ julian_year
     convert()
+    GTO time
 }
 
 def second { 1 }
