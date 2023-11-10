@@ -1,4 +1,4 @@
-# dm42
+# dm42 [![Build](https://github.com/Basicprogrammer10/dm42/actions/workflows/rust.yml/badge.svg)](https://github.com/Basicprogrammer10/dm42/actions/workflows/rust.yml)
 
 Programs for the [Swissmicros DM42](https://www.swissmicros.com/product/dm42) and a preprocessor for creating them.
 
