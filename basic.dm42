@@ -1,5 +1,0 @@
-export def zero {
-    while { DUP } > { 0 } {
-        1, -
-    }
-}

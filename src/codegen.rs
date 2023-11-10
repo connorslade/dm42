@@ -111,7 +111,7 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                         .body
                         .push(format!("GTO {end_label}"));
                 } else {
-                    push_ins(codegen, "NOP".to_owned());
+                    push_ins(codegen, format!("GTO {end_label}"));
                 }
 
                 // Create false branch

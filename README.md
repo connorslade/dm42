@@ -40,11 +40,19 @@ export def sort {
   - [x] If
   - [x] Raw-If
   - [x] While
-- [ ] Finish codegen
+  - [ ] Do While
+- [x] Finish codegen
   - [x] Functions
   - [x] If-statements
-  - [ ] While loops
+  - [x] While loops
+  - [x] Do While
 - [ ] Future Ideas
   - [ ] For loops
   - [ ] Decent error reporting
   - [ ] Inline functions
+  - [ ] vscode lang grammer
+  - [ ] Basic documentation
+  - [ ] Macros
+  - [ ] Imports
+  - [ ] CLI
+  - [ ] Automatically cut string

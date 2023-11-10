@@ -9,7 +9,7 @@ mod misc;
 mod token;
 mod tokenize;
 
-const INPUT: &str = "basic.dm42";
+const INPUT: &str = "test.dm42";
 const OUTPUT: &str = "out.free42";
 
 fn main() -> Result<()> {
