@@ -47,6 +47,12 @@ pub enum Comparison {
     Lte,
 }
 
+impl Condition {
+    pub fn is_raw(&self) -> bool {
+        matches!(self, Condition::Raw { .. })
+    }
+}
+
 impl Comparison {
     pub fn instruction(&self) -> &str {
         match self {

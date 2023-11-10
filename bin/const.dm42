@@ -1,0 +1,27 @@
+// Allows using various constants
+// Flag 3 - Exit to custom menu
+
+export def const {
+    CLMENU
+    "c",   KEY 1 GTO light_speed
+    "h",   KEY 2 GTO planck_constant
+    "e",   KEY 3 GTO elementary_charge
+    "N↓A", KEY 4 GTO avogadro_constant
+    // KEY 8 GTO page_2
+    if { FS? 03 } {
+        KEY 9 GTO custom_menu
+    }
+    MENU
+    STOP
+}
+
+def custom_menu {
+    SF 27
+}
+
+// == CONSTANTS ==
+
+def light_speed { 299792458 }
+def planck_constant { 6.62607015e-34 }
+def elementary_charge { 1.602176634e-19 }
+def avogadro_constant { 6.02214076e23 }

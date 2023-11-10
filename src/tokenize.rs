@@ -4,8 +4,6 @@ use anyhow::{bail, Context, Result};
 
 use crate::token::{Comparison, Condition, Token};
 
-const COMMENT_CHARS: &[char] = &['#', ';', '@'];
-
 pub struct Tokenizer {
     chars: Vec<char>,
     idx: usize,

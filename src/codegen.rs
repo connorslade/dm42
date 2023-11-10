@@ -1,5 +1,7 @@
 use std::borrow::Cow;
 
+use regex::Regex;
+
 use crate::{
     ident::FreeIdent,
     misc::OrderedMap,
@@ -40,7 +42,9 @@ impl CodeGen {
     }
 
     fn get_function(&mut self, name: &str) -> &mut Function {
-        self.functions.get_mut(name).expect("Function not found")
+        self.functions
+            .get_mut(name)
+            .expect(format!("Function `{}` not found", name).as_str())
     }
 
     fn new_ident(&mut self) -> String {
@@ -102,6 +106,7 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                 if body.is_empty() && else_body.is_empty() {
                     continue;
                 }
+                let is_raw = condition.is_raw();
                 gen_condition(codegen, condition, function.clone());
                 let end_label = codegen.new_ident();
 
@@ -111,7 +116,9 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                     push_ins(codegen, format!("GTO {true_label}"));
 
                     let mut fun = Function::new_private(true_label.clone());
-                    fun.ins("DROPN 2".to_owned());
+                    if !is_raw {
+                        fun.ins("DROPN 2".to_owned());
+                    }
                     codegen.functions.insert(true_label.clone(), fun);
                     _generate(codegen, body, true_label.clone());
                     codegen
@@ -128,14 +135,16 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                     push_ins(codegen, format!("GTO {false_label}"));
 
                     let mut fun = Function::new_private(false_label.clone());
-                    fun.ins("DROPN 2".to_owned());
+                    if !is_raw {
+                        fun.ins("DROPN 2".to_owned());
+                    }
                     codegen.functions.insert(false_label.clone(), fun);
                     _generate(codegen, else_body, false_label.clone());
                     codegen
                         .get_function(&false_label)
                         .body
                         .push(format!("GTO {end_label}"));
-                } else {
+                } else if !is_raw {
                     push_ins(codegen, "DROPN 2".to_owned());
                 }
 
@@ -164,9 +173,23 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                 push_ins(codegen, format!("GTO {loop_start}"));
                 push_ins(codegen, "DROPN 2".to_owned());
             }
-            Token::Instruction(ins) => codegen.get_function(&function).body.push(ins),
+            Token::Instruction(ins) => {
+                let ins = transform_instruction(codegen, ins);
+                push_ins(codegen, ins);
+            }
         }
     }
+}
+
+fn transform_instruction(codegen: &mut CodeGen, mut ins: String) -> String {
+    // Todo, clean this up
+    for (name, func) in codegen.functions.iter() {
+        let regex = Regex::new(&format!("\\b{name}\\b")).unwrap();
+        ins = regex
+            .replace(&ins, format!("{}", func.ident()))
+            .into_owned();
+    }
+    ins
 }
 
 fn gen_condition(codegen: &mut CodeGen, condition: Condition, function: String) {
