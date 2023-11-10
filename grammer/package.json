@@ -1,0 +1,34 @@
+{
+  "name": "dm42",
+  "displayName": "dm42",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.79.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "dm42",
+        "aliases": [
+          "dm42",
+          "dm42"
+        ],
+        "extensions": [
+          ".dm42"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "dm42",
+        "scopeName": "source.dm42",
+        "path": "./syntaxes/dm42.tmLanguage.json"
+      }
+    ]
+  }
+}

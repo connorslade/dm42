@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "dm42",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#identifiers"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#calc"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.dm42",
+          "match": "//.*$"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.dm42",
+          "match": "\\b(if|else|while|do|def|export)\\b"
+        }
+      ]
+    },
+    "identifiers": {
+      "name": "entity.name.function.dm42",
+      "match": "\\b[a-z_][a-zA-Z_0-9]*\\b"
+    },
+    "strings": {
+      "name": "string.quoted.double.dm42",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.dm42",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.dm42",
+      "match": "\\b(0x[0-9a-fA-F]+|\\d+)\\b"
+    },
+    "calc": {
+      "name": "entity.name.selector.dm42",
+      "match": "\\b([A-Z]+)\\b"
+    }
+  },
+  "scopeName": "source.dm42"
+}
