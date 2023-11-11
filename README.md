@@ -5,6 +5,7 @@ Various programs for the [Swissmicros DM42](https://www.swissmicros.com/product/
 ## Programs
 
 - [Statistics](bin#statistics) &mdash; Various statistics functions for use on N×1 matrices
+- [Fractions](bin#fractions) &mdash; Operations for working with exact fractions
 - [Unit converter](bin#unit-converter) &mdash; A simple unit convertor
 - [Physical Constants](bin#physical-constants) &mdash; Lets you push various physical constants onto the stack
 - [Matrix Sorter](bin#matrix-sorter) &mdash; Sorts a matrix column, used in the statistics program

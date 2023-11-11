@@ -1,0 +1,224 @@
+// Functions:
+// - [x] Add
+// - [x] Subtract
+// - [x] Multiply
+// - [x] Divide
+// - [x] Simplify
+// - [x] To Decimal
+// - [ ] Frac (Complex shortcut)
+// - [ ] From Decimal?
+// - [ ] Scaler multiplication?
+
+export def frac {
+    CLMENU
+    "frac", KEY 1 GTO make_frac
+    "+",    KEY 2 GTO add
+    "-",    KEY 3 GTO sub
+    "*",    KEY 4 GTO multiply
+    "/",    KEY 5 GTO divide
+    "dec",  KEY 6 GTO to_dec
+    KEY 8 GTO page_2
+    menu()
+}
+
+def page_2 {
+    CLMENU
+    "simp", KEY 1 GTO simplify
+    "1/X",  KEY 2 GTO recip
+    KEY 7 GTO frac
+    menu()
+}
+
+def menu {
+    if { FS? 03 } {
+        KEY 9 GTO custom_menu
+    }
+    MENU
+    STOP
+}
+
+def custom_menu { SF 27 }
+
+def gcf {
+    do while { X!=0? } {
+        MOD
+        LASTX
+        X<>Y
+    }
+    DROP
+    ABS
+}
+
+// XY/GCF(XY)
+def lcm {
+    DUPN 2
+    gcf()
+    /
+    *
+}
+
+// Check if X is a fraction, if not, throw error
+def assert_frac {
+    if { CPX? } else {
+        "X is not a fraction"
+        STOP
+    }
+}
+
+def assert_frac_xy {
+    if { CPX? } else {
+        "X is not a fraction"
+        STOP
+    }
+
+    X<>Y
+
+    if { CPX? } else {
+        "Y is not a fraction"
+        STOP
+    }
+}
+
+// Get both denominators of the fractions on X and Y to be the same
+// TODO: maybe cleanup
+def normalize_denom {
+    STO "A" // X
+    DROP
+    STO "B" // Y
+    COMPLEX
+    X<>Y
+    DROP
+    RCL "A"
+    COMPLEX
+    X<>Y
+    DROP
+    STO 00
+    X<>Y
+    STO 01
+    lcm()
+    STO 02
+    DUP
+
+    RCL 00
+    /
+    STO 00
+    DROP
+
+    RCL 01
+    /
+    STO 01
+    DROP
+
+    RCL "B"
+    COMPLEX
+    DROP
+    RCL 01
+    *
+    RCL 02
+    COMPLEX
+
+    RCL "A"
+    COMPLEX
+    DROP
+    RCL 00
+    *
+    RCL 02
+    COMPLEX
+}
+
+def add_sub_base {
+    normalize_denom()
+    COMPLEX
+    STO 00
+    DROP
+    X<>Y
+    COMPLEX
+    DROP
+}
+
+// == Operations ==
+
+def make_frac {
+    // TODO: Assert X and Y are both reals
+    COMPLEX
+}
+
+def add {
+    assert_frac_xy()
+    add_sub_base()
+    +
+    RCL 00
+    COMPLEX
+    simplify()
+}
+
+def sub {
+    assert_frac_xy()
+    add_sub_base()
+    X<>Y
+    -
+    RCL 00
+    COMPLEX
+    simplify()
+}
+
+// Multiplys bolth numerators and denominators of the fractions on X and Y
+def multiply {
+    assert_frac_xy()
+    STO "A"
+    DROP
+    COMPLEX
+    STO "B"
+    DROP
+    RCL "A"
+    COMPLEX
+    STO "A"
+    DROP
+    *
+    RCL "B"
+    RCL "A"
+    *
+    COMPLEX
+    simplify()
+}
+
+// Multiplly Y by reciprocal of X
+def divide {
+    assert_frac_xy()
+    COMPLEX
+    X<>Y
+    COMPLEX
+    multiply()
+    simplify()
+}
+
+// Devide numerator and denominator by their GCF
+def simplify {
+    DUP
+    COMPLEX
+    gcf()
+    STO 00
+    DROP
+    COMPLEX
+    RCL 00
+    /
+    X<>Y
+    RCL 00
+    /
+    X<>Y
+    COMPLEX
+}
+
+def recip {
+    assert_frac()
+    COMPLEX
+    X<>Y
+    COMPLEX
+}
+
+// Divides the numerator by the denominator
+def to_dec {
+    assert_frac()
+    COMPLEX
+    /
+}

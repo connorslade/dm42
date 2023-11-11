@@ -159,19 +159,20 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                 let loop_condition = codegen.new_ident();
                 if !do_while {
                     push_ins(codegen, format!("GTO {loop_condition}"));
-                } else {
-                    push_ins(codegen, "0".to_string());
-                    push_ins(codegen, "0".to_string());
                 }
                 push_ins(codegen, format!("LBL {loop_start}"));
-                push_ins(codegen, "DROPN 2".to_owned());
+                if !do_while {
+                    push_ins(codegen, "DROPN 2".to_owned());
+                }
                 _generate(codegen, body, function.clone());
                 if !do_while {
                     push_ins(codegen, format!("LBL {loop_condition}"));
                 }
                 gen_condition(codegen, condition, function.clone());
                 push_ins(codegen, format!("GTO {loop_start}"));
-                push_ins(codegen, "DROPN 2".to_owned());
+                if !do_while {
+                    push_ins(codegen, "DROPN 2".to_owned());
+                }
             }
             Token::Instruction(ins) => {
                 let ins = transform_instruction(codegen, ins);
@@ -182,6 +183,11 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
 }
 
 fn transform_instruction(codegen: &mut CodeGen, mut ins: String) -> String {
+    ins = ins
+        .split_once("//")
+        .unwrap_or((ins.as_str(), ""))
+        .0
+        .to_owned();
     // Todo, clean this up
     for (name, func) in codegen.functions.iter() {
         let regex = Regex::new(&format!("\\b(?!\"){name}(?!\")\\b")).unwrap();

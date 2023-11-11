@@ -9,6 +9,7 @@ In either case, the `.raw` files for each program will be linked in their respec
 Now on to the programs! (In order of how cool I think they are)
 
 - [Statistics](#statistics) &mdash; Various statistics functions for use on N×1 matrices
+- [Fractions](#fractions) &mdash; Operations for working with exact fractions
 - [Unit converter](#unit-converter) &mdash; A simple unit convertor
 - [Physical Constants](#physical-constants) &mdash; Lets you push various physical constants onto the stack
 - [Matrix Sorter](#matrix-sorter) &mdash; Sorts a matrix column, used in the statistics program
@@ -40,6 +41,10 @@ The run the "STAT" program (XEQ>STAT), this will open a two page menu with the f
 - Max (MAX)
 - Q1 (Q1)
 - Q3 (Q3)
+
+## Fractions
+
+\<todo (am eepy)>
 
 ## Unit converter
 
