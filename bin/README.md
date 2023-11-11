@@ -6,6 +6,7 @@
 There are two file formats used for programs in this folder, `.dm42` and `.free42`.
 Free42 files are raw program listings that can be loaded with free42 directly, while the Dm42 files must be run through my transpiler / preprocessor first.
 In either case, the `.raw` files for each program will be linked in their respective section.
+Now on to the programs! (In order of how cool I think they are)
 
 - [Statistics](#statistics) &mdash; Various statistics functions for use on N×1 matrices
 - [Unit converter](#unit-converter) &mdash; A simple unit convertor
@@ -74,8 +75,33 @@ Currently the units it supports are as follows:
 
 ## Physical Constants
 
-\<todo>
+![Screenshot](https://github.com/Basicprogrammer10/dm42/assets/50306817/3fab1fec-aec5-4330-ba6d-a73329bcd7df)
+
+[[download .raw](https://connorcode.com/files/Misc/dm42/constants.raw)]
+[[source code](constant.dm42)]
+
+Simple program to push some constants to the stack.
+Setting flag `03` will open the custom menu when you exit the program.
+It contains the following constants:
+
+- Light speed
+- Planck constant
+- Elementary charge
+- Avogadro constant
+- Cesium hyperfine transition
+- Boltzmann constant
+- Luminous efficacy
+
+From [Meet the Constants &ndash; NIST](https://www.nist.gov/si-redefinition/meet-constants)
 
 ## Matrix Sorter
 
-\<todo>
+![Screenshot](https://github.com/Basicprogrammer10/dm42/assets/50306817/70a4ac2b-5d5e-480a-9675-89575144f016)
+
+[[download .raw](https://connorcode.com/files/Misc/dm42/sort.raw)]
+[[source code](sort.dm42)]
+
+This program was originally written for my statistics program (its bundled in the download) but I rewrote it while working on my transpiler / preprocessor.
+The only differences are that it throws a custom error if there is not a matrix on X and its slightly less efficient.
+It just sorts the first column of an N×1 matrix.
+Thats all.
