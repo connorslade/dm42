@@ -8,6 +8,7 @@ Various programs for the [Swissmicros DM42](https://www.swissmicros.com/product/
 - [Fractions](bin#fractions) &mdash; Operations for working with exact fractions
 - [Unit converter](bin#unit-converter) &mdash; A simple unit convertor
 - [Physical Constants](bin#physical-constants) &mdash; Lets you push various physical constants onto the stack
+- [Miscellaneous Functions](bin#miscellaneous-functions) &mdash; Miscellaneous mathematical functions missing from the 42s
 - [Matrix Sorter](bin#matrix-sorter) &mdash; Sorts a matrix column, used in the statistics program
 
 ## Preprocessor

@@ -12,6 +12,7 @@ Now on to the programs! (In order of how cool I think they are)
 - [Fractions](#fractions) &mdash; Operations for working with exact fractions
 - [Unit converter](#unit-converter) &mdash; A simple unit convertor
 - [Physical Constants](#physical-constants) &mdash; Lets you push various physical constants onto the stack
+- [Miscellaneous Functions](miscellaneous-functions) &mdash; Miscellaneous mathematical functions missing from the 42s
 - [Matrix Sorter](#matrix-sorter) &mdash; Sorts a matrix column, used in the statistics program
 
 ## Statistics
@@ -98,6 +99,10 @@ It contains the following constants:
 - Luminous efficacy
 
 From [Meet the Constants &ndash; NIST](https://www.nist.gov/si-redefinition/meet-constants)
+
+## Miscellaneous Functions
+
+\<todo (still eepy)>
 
 ## Matrix Sorter
 

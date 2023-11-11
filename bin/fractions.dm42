@@ -5,7 +5,7 @@
 // - [x] Divide
 // - [x] Simplify
 // - [x] To Decimal
-// - [ ] Frac (Complex shortcut)
+// - [x] Frac (Complex shortcut)
 // - [ ] From Decimal?
 // - [ ] Scaler multiplication?
 
@@ -139,7 +139,8 @@ def add_sub_base {
 // == Operations ==
 
 def make_frac {
-    // TODO: Assert X and Y are both reals
+    // TODO: Assert X and Y are both ~reals~ integers
+    // TODO: Make sure niether X or Y are decimals
     COMPLEX
 }
 

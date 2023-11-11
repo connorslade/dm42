@@ -1,0 +1,52 @@
+// Various math functions missing from the dm42
+
+// - LCM
+// - GCF
+// - Log_y(x)
+// - xth root of y
+
+export def math {
+    CLMENU
+    "lcm",    KEY 1 GTO lcm
+    "gcf",    KEY 2 GTO gcf
+    "logy x", KEY 3 GTO log_yx
+    "x√y",    KEY 4 GTO x_root_y
+    if { FS? 03 } {
+        KEY 9 GTO custom_menu
+    }
+    MENU
+    STOP
+}
+
+def custom_menu { SF 27 }
+
+// == Functions ==
+
+def gcf {
+    do while { X!=0? } {
+        MOD
+        LASTX
+        X<>Y
+    }
+    DROP
+    ABS
+}
+
+def lcm {
+    DUPN 2
+    gcf()
+    /
+    *
+}
+
+def log_yx {
+    LOG
+    X<>Y
+    LOG
+    /
+}
+
+def x_root_y {
+    1/X
+    Y^X
+}
