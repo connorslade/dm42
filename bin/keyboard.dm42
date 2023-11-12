@@ -1,12 +1,26 @@
-// Lets you use your calculator to compose scores of utmost beauty.
-
+// Lets you use your calculator to compose scores of utmost elegance.
 export def key {
-    GETKEY
+    GETKEY1
     STO 00
-    if { } >= { 10 } {
+
+    // Exit if key 33 is pressed (EXIT)
+    if { DUP } == { 33 } {
+        DROP
+        STOP
+    }
+
+    // Play tone 0 if key 10 is pressed (SIN)
+    if { DUP } == { 10 } {
+        DROP
         TONE 0
         GTO key
     }
+
+    // Do nothing if other keys are pressed
+    if { } > { 10 } {
+        GTO key
+    }
+
     TONE IND 00
     GTO key
 }

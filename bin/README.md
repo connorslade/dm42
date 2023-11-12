@@ -11,6 +11,7 @@ Now on to the programs! (In order of how cool I think they are)
 - [Statistics](#statistics) &mdash; Various statistics functions for use on N×1 matrices
 - [Fractions](#fractions) &mdash; Operations for working with exact fractions
 - [Unit converter](#unit-converter) &mdash; A simple unit convertor
+- [Keyboard](#keyboard) &mdash; Play music using your calculator's built in buzzer
 - [Physical Constants](#physical-constants) &mdash; Lets you push various physical constants onto the stack
 - [Miscellaneous Functions](miscellaneous-functions) &mdash; Miscellaneous mathematical functions missing from the 42s
 - [Matrix Sorter](#matrix-sorter) &mdash; Sorts a matrix column, used in the statistics program
@@ -78,6 +79,10 @@ Currently the units it supports are as follows:
 - **Bytes**: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte
 - **Pressure**: Pascal, Bar, Atmosphere, Pounds per square inch
 - **Power**: Watt, Horsepower
+
+## Keyboard
+
+\<todo>
 
 ## Physical Constants
 
