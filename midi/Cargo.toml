@@ -1,0 +1,11 @@
+[package]
+name = "midi"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+midly = "0.5.3"
+
+# [workspace]
+# resolver = "2"
+# members = ["midi"]

@@ -3,6 +3,10 @@ name = "dm42"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+resolver = "2"
+members = ["midi"]
+
 [dependencies]
 anyhow = "1.0.75"
 clap = { version = "4.4.7", features = ["derive"] }
