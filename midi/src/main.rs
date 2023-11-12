@@ -1,17 +1,43 @@
 use std::fs;
 
-use midly::{Format, MetaMessage, MidiMessage, Smf, Timing, TrackEvent, TrackEventKind};
+use midly::{MidiMessage, Smf, Timing, TrackEventKind};
 
-const MIDI_FILE: &str = r"V:\Downloads\Doja Cat - Say So.mid";
+const MIDI_FILE: &str = "./songs/I Just Died in Your Arms.mid";
 
 // Maps midi notes to 42s notes (0-9)
-const NOTE_MAP: &[(u8, u8)] = &[(71, 5), (69, 4), (66, 2), (64, 1)];
+const NOTE_MAP: &[(u8, u8)] = &[(79, 4), (78, 3), (76, 2), (74, 1), (71, 0)];
+
+/* Say So & Wii Channel
+    (76, 9),
+    (75, 8),
+    (74, 7),
+    (73, 6),
+    (71, 5),
+    (69, 4),
+    (68, 3),
+    (67, 2),
+    (66, 2),
+    (64, 1),
+    (62, 0),
+
+    I Just Died in Your Arms
+    (79, 4), (78, 3), (76, 2), (74, 1), (71, 0)
+
+    Hips Dont Lie
+    (87, 9),
+    (85, 7),
+    (84, 6),
+    (82, 5),
+    (80, 4),
+    (78, 3),
+    (77, 2),
+*/
 
 fn main() {
     let raw = fs::read(MIDI_FILE).unwrap();
     let midi = Smf::parse(&raw).unwrap();
 
-    assert_eq!(midi.header.format, Format::SingleTrack);
+    //assert_eq!(midi.header.format, Format::SingleTrack);
     let track = &midi.tracks[0];
     let ticks_per_quarter = match midi.header.timing {
         Timing::Metrical(e) => e.as_int(),
@@ -19,7 +45,6 @@ fn main() {
     };
 
     let mut notes = Vec::new();
-    let mut tempo = 0; // us per quarter note
     let mut time = 0;
     let mut min_note = u8::MAX;
     for event in track {
@@ -42,21 +67,26 @@ fn main() {
             } => {
                 time += event.delta.as_int();
                 let mut note = notes.pop().unwrap();
-                assert_eq!(note.note, key.as_int());
+                assert_eq!(
+                    note.note,
+                    key.as_int(),
+                    "Note off doesn't match note on: {}",
+                    notes.len()
+                );
                 note.length = (time as f32 / ticks_per_quarter as f32 * 2.0) - note.start;
                 notes.push(note);
-            }
-            TrackEventKind::Meta(MetaMessage::Tempo(t)) => {
-                tempo = t.as_int();
-                println!("Tempo: {}", tempo);
             }
             _ => {}
         }
     }
 
-    notes
-        .iter_mut()
-        .for_each(|n| n.note = NOTE_MAP.iter().find(|(a, _)| *a == n.note).unwrap().1);
+    notes.iter_mut().for_each(|n| {
+        n.note = NOTE_MAP
+            .iter()
+            .find(|(a, _)| *a == n.note)
+            .expect(&format!("New Pitch: {}", n.note))
+            .1
+    });
 
     for note in &notes {
         println!(
@@ -81,11 +111,9 @@ fn main() {
             }
         }
 
-        prg.push(format!("@ {}", note.note));
         for _ in 0..note.length as u32 {
             prg.push(format!("TONE {}", note.note));
         }
-        prg.push(format!("@ END"));
         last = note.start as u32 + note.length as u32;
     }
 

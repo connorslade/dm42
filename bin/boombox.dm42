@@ -1,0 +1,242 @@
+export def boom {
+    CLMENU
+    "say",  KEY 1 XEQ play_say_so
+    "hips", KEY 2 XEQ play_hips_dont_lie
+    "died", KEY 3 XEQ play_i_just_died_in_your_arms
+    "wii",  KEY 4 XEQ play_wii_theme
+    KEY 8 GTO rest_options
+    menu()
+}
+
+def rest_options {
+    CLMENU
+    "rcl",  KEY 1 XEQ rest_recall
+    "sto",  KEY 2 XEQ rest_store
+    "desk", KEY 5 XEQ reset_desktop_preset
+    "menu", KEY 6 XEQ reset_dm42_preset
+    KEY 7 GTO boom
+    menu()
+}
+
+def menu {
+    if { FS? 03 } {
+        KEY 9 GTO custom_menu
+    }
+    MENU
+    STOP
+}
+
+def custom_menu { SF 27 }
+
+// == Rest Options ==
+
+def rest_recall {
+    RCL 08
+}
+
+def rest_store {
+    STO 08
+    DROP
+}
+
+def reset_desktop_preset {
+    2000000
+    STO 08
+    DROP
+}
+
+def reset_dm42_preset {
+    1000
+    STO 08
+    DROP
+}
+
+def rest {
+    RCL 08
+    while { X>0? } {
+        1, -
+    }
+    DROP
+}
+
+// == Music ==
+
+def play_say_so {
+    rest()
+    TONE 5
+    TONE 4
+    TONE 5
+    TONE 4
+    TONE 5
+    TONE 4
+    rest()
+    TONE 4
+    rest()
+    TONE 4
+    TONE 5
+    TONE 2
+    TONE 2
+    TONE 1
+    rest()
+    TONE 5
+    TONE 4
+    TONE 2
+    TONE 4
+    TONE 2
+    TONE 4
+    TONE 2
+    rest()
+    TONE 4
+    rest()
+    TONE 4
+    TONE 5
+    rest()
+    TONE 2
+}
+
+def play_hips_dont_lie {
+    TONE 4
+    rest()
+    TONE 7
+    TONE 6
+    TONE 5
+    TONE 3
+    rest()
+    TONE 4
+    TONE 5
+    TONE 6
+    rest()
+    TONE 5
+    TONE 4
+    TONE 2
+    rest()
+    TONE 3
+    TONE 4
+    TONE 5
+    rest()
+    TONE 4
+    TONE 3
+    TONE 6
+    rest()
+    TONE 5
+    TONE 4
+    TONE 5
+    TONE 5
+}
+
+def play_i_just_died_in_your_arms {
+    TONE 3
+    TONE 3
+    rest()
+    rest()
+    rest()
+    TONE 2
+    TONE 3
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 3
+    TONE 3
+    TONE 3
+    TONE 1
+    TONE 2
+    TONE 2
+    rest()
+    rest()
+    rest()
+    rest()
+    rest()
+    rest()
+    rest()
+    TONE 3
+    TONE 2
+    TONE 3
+    rest()
+    TONE 3
+    TONE 2
+    TONE 1
+    TONE 1
+    TONE 0
+    TONE 0
+    TONE 0
+    TONE 0
+    rest()
+    TONE 1
+    TONE 1
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 3
+    TONE 3
+    TONE 3
+    TONE 1
+    TONE 1
+}
+
+def play_wii_theme {
+    TONE 2
+    rest()
+    TONE 4
+    TONE 6
+    rest()
+    TONE 4
+    rest()
+    TONE 2
+    TONE 0
+    TONE 0
+    TONE 0
+    rest()
+    rest()
+    rest()
+    rest()
+    TONE 2
+    TONE 0
+    TONE 2
+    TONE 4
+    TONE 6
+    rest()
+    TONE 4
+    rest()
+    TONE 2
+    TONE 9
+    TONE 9
+    TONE 9
+    TONE 8
+    TONE 7
+    rest()
+    rest()
+    rest()
+    TONE 3
+    rest()
+    TONE 6
+    TONE 2
+    rest()
+    TONE 6
+    rest()
+    TONE 3
+    rest()
+    TONE 6
+    rest()
+    TONE 2
+    TONE 2
+    rest()
+    TONE 1
+    rest()
+    TONE 0
+    TONE 0
+    TONE 0
+    rest()
+    rest()
+    rest()
+    TONE 0
+    TONE 0
+    TONE 0
+    rest()
+    rest()
+    rest()
+    TONE 1
+    rest()
+    TONE 0
+}

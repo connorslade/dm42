@@ -155,13 +155,15 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                 body,
                 do_while,
             } => {
+                let is_raw = condition.is_raw();
                 let loop_start = codegen.new_ident();
                 let loop_condition = codegen.new_ident();
+
                 if !do_while {
                     push_ins(codegen, format!("GTO {loop_condition}"));
                 }
                 push_ins(codegen, format!("LBL {loop_start}"));
-                if !do_while {
+                if !do_while && !is_raw {
                     push_ins(codegen, "DROPN 2".to_owned());
                 }
                 _generate(codegen, body, function.clone());
@@ -170,7 +172,7 @@ fn _generate(codegen: &mut CodeGen, tokens: Vec<Token>, function: String) {
                 }
                 gen_condition(codegen, condition, function.clone());
                 push_ins(codegen, format!("GTO {loop_start}"));
-                if !do_while {
+                if !do_while && !is_raw {
                     push_ins(codegen, "DROPN 2".to_owned());
                 }
             }
