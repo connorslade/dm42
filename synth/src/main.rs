@@ -14,6 +14,7 @@ use midly::{live::LiveEvent, MidiMessage};
 
 const NOTE_LENGTH_DEVISOR: u32 = 2;
 const NOTE_GAP_DEVISOR: u32 = 10;
+const NOTE_FADE_DEVISOR: u32 = 20;
 
 const NOTE_MAP: [f32; 10] = [
     160.0, // 60 => 0
@@ -128,7 +129,12 @@ fn on_event(_time: u64, data: &[u8], synth: &mut Arc<Synth>) {
                 value: _,
             } => match controller.as_int() {
                 // Stop all notes
-                123 | 122 => synth.queue.lock().unwrap().clear(),
+                123 | 122 => synth
+                    .queue
+                    .lock()
+                    .unwrap()
+                    .iter_mut()
+                    .for_each(|x| x.playing = false),
                 _ => {}
             },
             _ => {}
@@ -198,13 +204,20 @@ impl Iterator for Oscillator {
 
     fn next(&mut self) -> Option<Self::Item> {
         self.i = self.i.saturating_add(1);
+        let signal = (self.i as f32 * self.tone * 2.0 * PI / self.sample_rate as f32).sin();
 
         match self.duration {
             Some(d) if self.i > (self.sample_rate / NOTE_GAP_DEVISOR) + d => return None,
-            Some(d) if self.i > d => return Some(0.0),
+            Some(d) if self.i > (self.sample_rate / NOTE_FADE_DEVISOR) + d => return Some(0.0),
+            Some(d) if self.i > d => {
+                let fade_samples = self.sample_rate / NOTE_FADE_DEVISOR;
+                let samples_in = self.i - d;
+                let inv_amp = samples_in as f32 / fade_samples as f32;
+                return Some(signal * (1.0 - inv_amp));
+            }
             _ => {}
         }
 
-        Some((self.i as f32 * self.tone * 2.0 * PI / self.sample_rate as f32).sin())
+        Some(signal)
     }
 }
