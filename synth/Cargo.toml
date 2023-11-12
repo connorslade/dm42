@@ -1,0 +1,10 @@
+[package]
+name = "synth"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.75"
+cpal = "0.15.2"
+midir = "0.9.1"
+midly = "0.5.3"
