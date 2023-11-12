@@ -1,0 +1,12 @@
+// Lets you use your calculator to compose scores of utmost beauty.
+
+export def key {
+    GETKEY
+    STO 00
+    if { } >= { 10 } {
+        TONE 0
+        GTO key
+    }
+    TONE IND 00
+    GTO key
+}
