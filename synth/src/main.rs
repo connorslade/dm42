@@ -12,6 +12,22 @@ use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use midir::MidiInput;
 use midly::{live::LiveEvent, MidiMessage};
 
+const NOTE_LENGTH_DEVISOR: u32 = 2;
+const NOTE_GAP_DEVISOR: u32 = 10;
+
+const NOTE_MAP: [f32; 10] = [
+    160.0, // 60 => 0
+    210.5, // 61 => 1
+    235.0, // 62 => 2
+    266.5, // 63 => 3
+    285.5, // 64 => 4
+    307.5, // 65 => 5
+    363.5, // 66 => 6
+    400.0, // 67 => 7
+    444.0, // 68 => 8
+    500.0, // 69 => 9
+];
+
 fn main() -> Result<()> {
     let input = MidiInput::new("42synth input")?;
     let ports = input.ports();
@@ -39,22 +55,31 @@ fn main() -> Result<()> {
         .build_output_stream(
             &supported_config.into(),
             move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
-                let mut voices = synth.voices.lock().unwrap();
+                let mut queue = synth.queue.lock().unwrap();
                 for sample in data.iter_mut() {
-                    *sample = 0.0;
-                    let mut i = 0;
-                    while i < voices.len() {
-                        let voice = &mut voices[i];
-                        if let Some(s) = voice.oscillator.next() {
-                            if voice.playing {
-                                *sample += s;
+                    loop {
+                        let next = match queue.iter_mut().next() {
+                            Some(v) => v,
+                            None => {
+                                *sample = 0.0;
+                                break;
                             }
-                            i += 1;
-                        } else {
-                            voices.remove(i);
-                        }
+                        };
+
+                        *sample = match next.oscillator.next() {
+                            Some(s) => s,
+                            None => {
+                                if next.playing {
+                                    next.oscillator.reset();
+                                    continue;
+                                }
+
+                                queue.remove(0);
+                                continue;
+                            }
+                        } * synth.master_volume;
+                        break;
                     }
-                    *sample *= synth.master_volume;
                 }
             },
             move |err| eprintln!("an error occurred on output stream: {}", err),
@@ -69,7 +94,7 @@ fn main() -> Result<()> {
 }
 
 struct Synth {
-    voices: Mutex<Vec<Voice>>,
+    queue: Mutex<Vec<Voice>>,
     master_volume: f32,
     sample_rate: AtomicU32,
 }
@@ -83,22 +108,29 @@ struct Voice {
 
 #[derive(Debug)]
 struct Oscillator {
-    i: usize,
+    i: u32,
     tone: f32,
-    sample_rate: f32,
-    duration: Option<usize>,
+    sample_rate: u32,
+    duration: Option<u32>,
 }
 
 fn on_event(_time: u64, data: &[u8], synth: &mut Arc<Synth>) {
     let event = LiveEvent::parse(data).unwrap();
     match event {
-        LiveEvent::Midi { channel, message } => match message {
-            MidiMessage::NoteOn { key, .. } => {
-                println!("hit note {} on channel {}", key, channel);
-                synth.note_on(key.as_int());
-            }
+        LiveEvent::Midi {
+            channel: _,
+            message,
+        } => match message {
+            MidiMessage::NoteOn { key, .. } => synth.note_on(key.as_int()),
             MidiMessage::NoteOff { key, .. } => synth.note_off(key.as_int()),
-
+            MidiMessage::Controller {
+                controller,
+                value: _,
+            } => match controller.as_int() {
+                // Stop all notes
+                123 | 122 => synth.queue.lock().unwrap().clear(),
+                _ => {}
+            },
             _ => {}
         },
         _ => {}
@@ -108,7 +140,7 @@ fn on_event(_time: u64, data: &[u8], synth: &mut Arc<Synth>) {
 impl Synth {
     fn new() -> Self {
         Self {
-            voices: Mutex::new(Vec::new()),
+            queue: Mutex::new(Vec::new()),
             master_volume: 0.5,
             sample_rate: AtomicU32::new(0),
         }
@@ -123,26 +155,14 @@ impl Synth {
     }
 
     fn note_on(&self, key: u8) {
-        const NOTE_MAP: [(u8, f32); 11] = [
-            (76, 1000.0), // 9
-            (75, 888.0),  // 8
-            (74, 800.0),  // 7
-            (73, 727.0),  // 6
-            (71, 615.0),  // 5
-            (69, 571.0),  // 4
-            (68, 533.0),  // 3
-            (67, 470.0),  // 2
-            (66, 470.0),  // 2
-            (64, 421.0),  // 1
-            (62, 320.0),  // 0
-        ];
-
-        let note = match NOTE_MAP.iter().find(|(k, _)| *k == key) {
-            Some((_, v)) => *v,
+        let note = key.checked_sub(60).and_then(|x| NOTE_MAP.get(x as usize));
+        let note = match note {
+            Some(n) => *n,
             None => return,
         };
 
-        self.voices.lock().unwrap().push(Voice {
+        let mut queue = self.queue.lock().unwrap();
+        queue.push(Voice {
             key,
             playing: true,
             oscillator: Oscillator::new(note, self.sample_rate()),
@@ -150,7 +170,7 @@ impl Synth {
     }
 
     fn note_off(&self, key: u8) {
-        let mut voices = self.voices.lock().unwrap();
+        let mut voices = self.queue.lock().unwrap();
         let note = voices.iter_mut().rev().find(|v| v.key == key);
         if let Some(i) = note {
             i.playing = false;
@@ -163,9 +183,13 @@ impl Oscillator {
         Self {
             tone,
             i: 0,
-            sample_rate: sample_rate as f32,
-            duration: None,
+            sample_rate: sample_rate,
+            duration: Some(sample_rate / NOTE_LENGTH_DEVISOR),
         }
+    }
+
+    fn reset(&mut self) {
+        self.i = 0;
     }
 }
 
@@ -173,13 +197,14 @@ impl Iterator for Oscillator {
     type Item = f32;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.i += 1;
+        self.i = self.i.saturating_add(1);
 
         match self.duration {
-            Some(d) if self.i > d => return None,
+            Some(d) if self.i > (self.sample_rate / NOTE_GAP_DEVISOR) + d => return None,
+            Some(d) if self.i > d => return Some(0.0),
             _ => {}
         }
 
-        Some((self.i as f32 * self.tone * 2.0 * PI / self.sample_rate).sin())
+        Some((self.i as f32 * self.tone * 2.0 * PI / self.sample_rate as f32).sin())
     }
 }
