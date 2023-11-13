@@ -1,3 +1,5 @@
+// Flag 03: Exit to custom menu
+
 // Functions:
 // - [x] Add
 // - [x] Subtract
@@ -6,25 +8,28 @@
 // - [x] Simplify
 // - [x] To Decimal
 // - [x] Frac (Complex shortcut)
-// - [ ] From Decimal?
-// - [ ] Scaler multiplication?
+// - [x] Integer multiplication?
+// TODO: Test with negitives
+// TODO: Try overwriting operator buttons
 
 export def frac {
     CLMENU
-    "frac", KEY 1 GTO make_frac
-    "+",    KEY 2 GTO add
-    "-",    KEY 3 GTO sub
-    "*",    KEY 4 GTO multiply
-    "/",    KEY 5 GTO divide
-    "dec",  KEY 6 GTO to_dec
+    "frac", KEY 1 XEQ make_frac
+    "+",    KEY 2 XEQ add
+    "-",    KEY 3 XEQ sub
+    "*",    KEY 4 XEQ multiply
+    "/",    KEY 5 XEQ divide
+    "dec",  KEY 6 XEQ to_dec
     KEY 8 GTO page_2
     menu()
 }
 
 def page_2 {
     CLMENU
-    "simp", KEY 1 GTO simplify
-    "1/X",  KEY 2 GTO recip
+    "simp", KEY 1 XEQ simplify
+    "1/X",  KEY 2 XEQ recip
+    "+/-",  KEY 3 XEQ flip_sign
+    "prev", KEY 6 XEQ preview
     KEY 7 GTO frac
     menu()
 }
@@ -60,23 +65,20 @@ def lcm {
 // Check if X is a fraction, if not, throw error
 def assert_frac {
     if { CPX? } else {
-        "X is not a fraction"
-        STOP
+        1, COMPLEX
     }
 }
 
 def assert_frac_xy {
     if { CPX? } else {
-        "X is not a fraction"
-        STOP
+        1, COMPLEX
     }
-
     X<>Y
 
     if { CPX? } else {
-        "Y is not a fraction"
-        STOP
+        1, COMPLEX
     }
+    X<>Y
 }
 
 // Get both denominators of the fractions on X and Y to be the same
@@ -126,6 +128,8 @@ def normalize_denom {
     COMPLEX
 }
 
+// Code used for both addition and subtraction
+// Normalizes the demonanator then puts both numerators on the stack
 def add_sub_base {
     normalize_denom()
     COMPLEX
@@ -138,10 +142,12 @@ def add_sub_base {
 
 // == Operations ==
 
+// Converts X and Y into a simplified fraction
 def make_frac {
     // TODO: Assert X and Y are both ~reals~ integers
     // TODO: Make sure niether X or Y are decimals
     COMPLEX
+    simplify()
 }
 
 def add {
@@ -207,14 +213,26 @@ def simplify {
     RCL 00
     /
     X<>Y
+
+    // if denom is neg, flip num
+    if { X<0? } {
+        +/-
+        X<>Y
+        +/-
+        X<>Y
+    }
+
     COMPLEX
+
 }
 
+// Swaps numerator and denominator
 def recip {
     assert_frac()
     COMPLEX
     X<>Y
     COMPLEX
+    simplify()
 }
 
 // Divides the numerator by the denominator
@@ -222,4 +240,24 @@ def to_dec {
     assert_frac()
     COMPLEX
     /
+}
+
+def flip_sign {
+    assert_frac()
+    COMPLEX
+    X<>Y
+    +/-
+    X<>Y
+    COMPLEX
+}
+
+// Shows the decimal value of the current fraction
+def preview {
+    assert_frac()
+    DUP
+    to_dec()
+    "="
+    ARCL ST X
+    AVIEW
+    DROP
 }
