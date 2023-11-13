@@ -13,8 +13,8 @@ use midir::MidiInput;
 use midly::{live::LiveEvent, MidiMessage};
 
 const NOTE_LENGTH_DEVISOR: u32 = 2;
-const NOTE_GAP_DEVISOR: u32 = 10;
-const NOTE_FADE_DEVISOR: u32 = 20;
+const NOTE_GAP_DEVISOR: u32 = 28;
+const NOTE_FADE_DEVISOR: u32 = 30;
 
 const NOTE_MAP: [f32; 10] = [
     160.0, // 60 => 0

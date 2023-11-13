@@ -4,13 +4,15 @@
 // - GCF
 // - Log_y(x)
 // - xth root of y
+// - Hypot
 
 export def math {
     CLMENU
-    "lcm",    KEY 1 GTO lcm
-    "gcf",    KEY 2 GTO gcf
-    "logy x", KEY 3 GTO log_yx
-    "x√y",    KEY 4 GTO x_root_y
+    "lcm",    KEY 1 XEQ lcm
+    "gcf",    KEY 2 XEQ gcf
+    "logy x", KEY 3 XEQ log_yx
+    "x√y",    KEY 4 XEQ x_root_y
+    "hypot",  KEY 5 XEQ hypot
     if { FS? 03 } {
         KEY 9 GTO custom_menu
     }
@@ -49,4 +51,12 @@ def log_yx {
 def x_root_y {
     1/X
     Y^X
+}
+
+def hypot {
+    X↑2
+    X<>Y
+    X↑2
+    +
+    SQRT   
 }

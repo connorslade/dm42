@@ -1,11 +1,23 @@
 export def boom {
     CLMENU
-    "say",  KEY 1 XEQ play_say_so
-    "hips", KEY 2 XEQ play_hips_dont_lie
-    "died", KEY 3 XEQ play_i_just_died_in_your_arms
-    "wii",  KEY 4 XEQ play_wii_theme
+    "say",   KEY 1 XEQ play_say_so
+    "hips",  KEY 2 XEQ play_hips_dont_lie
+    "died",  KEY 3 XEQ play_i_just_died_in_your_arms
+    "wii",   KEY 4 XEQ play_wii_theme
+    "mile",  KEY 5 XEQ play_thousand_miles
+    "mario", KEY 6 XEQ play_mario
+    KEY 8 GTO page_2
+    menu()
+    GTO boom
+}
+
+def page_2 {
+    CLMENU
+    "take", KEY 1 XEQ play_take_on_me
+    KEY 7 GTO boom
     KEY 8 GTO rest_options
     menu()
+    GTO page_2
 }
 
 def rest_options {
@@ -13,9 +25,10 @@ def rest_options {
     "rcl",  KEY 1 XEQ rest_recall
     "sto",  KEY 2 XEQ rest_store
     "desk", KEY 5 XEQ reset_desktop_preset
-    "menu", KEY 6 XEQ reset_dm42_preset
-    KEY 7 GTO boom
+    "dm42", KEY 6 XEQ reset_dm42_preset
+    KEY 7 GTO page_2
     menu()
+    GTO rest_options
 }
 
 def menu {
@@ -26,7 +39,10 @@ def menu {
     STOP
 }
 
-def custom_menu { SF 27 }
+def custom_menu {
+    SF 27
+    STOP
+}
 
 // == Rest Options ==
 
@@ -239,4 +255,207 @@ def play_wii_theme {
     TONE 1
     rest()
     TONE 0
+}
+
+def play_thousand_miles {
+    TONE 0
+    TONE 8
+    TONE 0
+    TONE 8
+    TONE 7
+    TONE 0
+    TONE 7
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 4
+    rest()
+    rest()
+    TONE 2
+    TONE 2
+    TONE 1
+    TONE 0
+    TONE 8
+    TONE 0
+    TONE 8
+    TONE 7
+    TONE 0
+    TONE 7
+    TONE 4
+    TONE 0
+    TONE 4
+    TONE 0
+    TONE 4
+    TONE 0
+    TONE 2
+    TONE 3
+    TONE 2
+    TONE 1
+    TONE 8
+    TONE 0
+    TONE 8
+    TONE 7
+    TONE 0
+    TONE 7
+    TONE 4
+    TONE 4
+    TONE 4
+    rest()
+    rest()
+    rest()
+    TONE 2
+    TONE 2
+    TONE 1
+    TONE 0
+    TONE 2
+    TONE 1
+    TONE 0
+    TONE 2
+    TONE 1
+    TONE 0
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 0
+    TONE 0
+    TONE 0
+}
+
+def play_mario {
+    TONE 5
+    TONE 1
+    TONE 0
+    rest()
+    TONE 2
+    TONE 4
+    TONE 3
+    TONE 2
+    TONE 1
+    TONE 6
+    TONE 8
+    TONE 9
+    TONE 7
+    TONE 8
+    TONE 6
+    TONE 4
+    TONE 5
+    TONE 3
+    rest()
+    TONE 4
+    TONE 1
+    TONE 0
+    rest()
+    TONE 2
+    TONE 4
+    TONE 3
+    TONE 2
+    TONE 1
+    TONE 6
+    TONE 8
+    TONE 9
+    TONE 7
+    TONE 8
+    TONE 6
+    TONE 4
+    TONE 5
+    TONE 3
+}
+
+def play_take_on_me {
+    TONE 5
+    TONE 5
+    TONE 2
+    TONE 0
+    rest()
+    TONE 0
+    rest()
+    TONE 3
+    rest()
+    TONE 3
+    rest()
+    TONE 3
+    TONE 6
+    TONE 6
+    TONE 7
+    TONE 9
+    TONE 7
+    TONE 7
+    TONE 7
+    TONE 3
+    rest()
+    TONE 2
+    rest()
+    TONE 4
+    rest()
+    TONE 4
+    rest()
+    TONE 4
+    TONE 3
+    TONE 3
+    TONE 4
+    TONE 3
+    TONE 4
+    TONE 4
+    TONE 2
+    TONE 0
+    rest()
+    TONE 0
+    rest()
+    TONE 3
+    rest()
+    TONE 3
+    rest()
+    TONE 3
+    TONE 6
+    TONE 6
+    TONE 7
+    TONE 9
+    TONE 7
+    TONE 7
+    TONE 7
+    TONE 3
+    rest()
+    TONE 2
+    rest()
+    TONE 4
+    rest()
+    TONE 4
+    rest()
+    TONE 4
+    TONE 3
+    TONE 3
+    TONE 4
+    TONE 3
+    TONE 4
+    TONE 4
+    TONE 2
+    TONE 0
+    rest()
+    TONE 0
+    rest()
+    TONE 3
+    rest()
+    TONE 3
+    rest()
+    TONE 3
+    TONE 6
+    TONE 6
+    TONE 7
+    TONE 9
+    TONE 7
+    TONE 7
+    TONE 7
+    TONE 4
+    rest()
+    TONE 2
+    rest()
+    TONE 4
+    rest()
+    TONE 4
+    rest()
+    TONE 4
+    TONE 3
+    TONE 3
+    TONE 3
 }

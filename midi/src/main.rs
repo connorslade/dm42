@@ -2,10 +2,10 @@ use std::fs;
 
 use midly::{MidiMessage, Smf, Timing, TrackEventKind};
 
-const MIDI_FILE: &str = "./songs/I Just Died in Your Arms.mid";
+const MIDI_FILE: &str = r"songs\take-on-me.mid";
 
 // Maps midi notes to 42s notes (0-9)
-const NOTE_MAP: &[(u8, u8)] = &[(79, 4), (78, 3), (76, 2), (74, 1), (71, 0)];
+// const NOTE_MAP: &[(u8, u8)] = &[(79, 4), (78, 3), (76, 2), (74, 1), (71, 0)];
 
 /* Say So & Wii Channel
     (76, 9),
@@ -46,19 +46,17 @@ fn main() {
 
     let mut notes = Vec::new();
     let mut time = 0;
-    let mut min_note = u8::MAX;
     for event in track {
         match event.kind {
             TrackEventKind::Midi {
                 channel: _,
                 message: MidiMessage::NoteOn { key, vel: _ },
             } => {
-                min_note = min_note.min(key.as_int());
                 time += event.delta.as_int();
                 notes.push(Note {
                     start: (time as f32 / ticks_per_quarter as f32 * 2.0),
                     length: 0.0,
-                    note: key.as_int(),
+                    note: key.as_int() - 60,
                 })
             }
             TrackEventKind::Midi {
@@ -69,7 +67,7 @@ fn main() {
                 let mut note = notes.pop().unwrap();
                 assert_eq!(
                     note.note,
-                    key.as_int(),
+                    key.as_int() - 60,
                     "Note off doesn't match note on: {}",
                     notes.len()
                 );
@@ -79,14 +77,6 @@ fn main() {
             _ => {}
         }
     }
-
-    notes.iter_mut().for_each(|n| {
-        n.note = NOTE_MAP
-            .iter()
-            .find(|(a, _)| *a == n.note)
-            .expect(&format!("New Pitch: {}", n.note))
-            .1
-    });
 
     for note in &notes {
         println!(
