@@ -7,6 +7,7 @@ Various programs for the [Swissmicros DM42](https://www.swissmicros.com/product/
 - [Statistics](bin#statistics) &mdash; Various statistics functions for use on N×1 matrices
 - [Fractions](bin#fractions) &mdash; Operations for working with exact fractions
 - [Unit converter](bin#unit-converter) &mdash; A simple unit convertor
+- [Boombox](bin#boombox) &mdash; Collection of songs you can play through the buzzer
 - [Keyboard](bin#keyboard) &mdash; Play music using your calculator's built in buzzer
 - [Physical Constants](bin#physical-constants) &mdash; Lets you push various physical constants onto the stack
 - [Miscellaneous Functions](bin#miscellaneous-functions) &mdash; Miscellaneous mathematical functions missing from the 42s
