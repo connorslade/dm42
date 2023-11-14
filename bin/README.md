@@ -46,7 +46,22 @@ The run the "STAT" program (XEQ>STAT), this will open a two page menu with the f
 
 ## Fractions
 
-\<todo (am eepy)>
+Lets you work with fractions!
+Flag `03` will open the custom menu on exit.
+Fractions are stored as rectangular complex numbers with the numerators in the real part and the denominator in the imaginary part.
+The program exposes some operators that work with these fractions through custom menus.
+Listed below are all of the functions:
+
+- Frac &mdash; Makes a fraction out of $\frac{y}{x}$. Automatically simplifies.
+- Addition
+- Subtraction
+- Multiplication
+- Division
+- Decimal Conversion &mdash; Replaces the fraction on the stack with its decimal representation.
+- Simplification &mdash; Simplifies the fraction. This is preformed automatically after every operation.
+- Reciprocal &mdash; Swaps the numerator and denominator.
+- Flip Signs &mdash; Flips the sign of the numerator, the denominator should never be negative.
+- Preview &mdash; Shows the decimal representation of the fraction without consuming it.
 
 ## Unit converter
 
@@ -82,7 +97,10 @@ Currently the units it supports are as follows:
 
 ## Keyboard
 
-\<todo>
+Lets you play tones with the keypad.
+The first ten keys are used with increasing pitch.
+$\{\sum+, \frac{1}{x}, \sqrt{x}, \log, \ln, \text{xeq}, \text{sto}, \text{rcl}, \text{R}\downarrow, \sin\}$
+The calculator only gives access to these ten tones, each with a length of a quarter second.
 
 ## Physical Constants
 
@@ -107,7 +125,15 @@ From [Meet the Constants &ndash; NIST](https://www.nist.gov/si-redefinition/meet
 
 ## Miscellaneous Functions
 
-\<todo (still eepy)>
+Adds various functions missing from the 42s.
+Exits to the custom menu when flag `03` is set.
+It contains the following functions:
+
+- Greatest Common Factor
+- Least Common Multiple
+- $\log_y(x)$
+- $\sqrt[x]{y}$
+- Hypotenuse $\sqrt{x^2 + y^2}$
 
 ## Matrix Sorter
 
