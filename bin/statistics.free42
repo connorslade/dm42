@@ -296,13 +296,13 @@
 188 LBL 21
 189 XEQ 36 @ Reset indices
 190 0
-191 LBL 30
+191 LBL 38
 192 RCLEL
 193 X↑2
 194 +
 195 I+
 196 FC? 76 @ Has index not overflowed mat len?
-197 GTO 30
+197 GTO 38
 198 RTN
 
 @ Standard deviation internals

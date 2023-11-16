@@ -9,8 +9,6 @@
 // - [x] To Decimal
 // - [x] Frac (Complex shortcut)
 // - [x] Integer multiplication?
-// TODO: Test with negitives
-// TODO: Try overwriting operator buttons
 
 export def frac {
     CLMENU
@@ -62,7 +60,7 @@ def lcm {
     *
 }
 
-// Check if X is a fraction, if not, throw error
+// Check if X is a fraction, if not, make one
 def assert_frac {
     if { CPX? } else {
         1, COMPLEX
