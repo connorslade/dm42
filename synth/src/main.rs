@@ -12,22 +12,13 @@ use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use midir::MidiInput;
 use midly::{live::LiveEvent, MidiMessage};
 
-const NOTE_LENGTH_DEVISOR: u32 = 2;
-const NOTE_GAP_DEVISOR: u32 = 28;
-const NOTE_FADE_DEVISOR: u32 = 30;
-
-const NOTE_MAP: [f32; 10] = [
-    160.0, // 60 => 0
-    210.5, // 61 => 1
-    235.0, // 62 => 2
-    266.5, // 63 => 3
-    285.5, // 64 => 4
-    307.5, // 65 => 5
-    363.5, // 66 => 6
-    400.0, // 67 => 7
-    444.0, // 68 => 8
-    500.0, // 69 => 9
-];
+/// Length of each note in seconds
+const NOTE_LENGTH: f32 = 0.250;
+/// Length between each note in seconds
+const NOTE_GAP: f32 = 0.05;
+/// Maps tone index to frequency
+/// (1865 used for error beep)
+const NOTE_MAP: [u32; 10] = [165, 220, 247, 277, 294, 330, 370, 415, 440, 554];
 
 fn main() -> Result<()> {
     let input = MidiInput::new("42synth input")?;
@@ -49,6 +40,7 @@ fn main() -> Result<()> {
         .unwrap()
         .with_max_sample_rate();
     let sample_rate = supported_config.sample_rate().0;
+    let channels = supported_config.channels();
     synth.update_sample_rate(sample_rate);
     println!("[*] Sample rate: {}", sample_rate);
 
@@ -57,17 +49,17 @@ fn main() -> Result<()> {
             &supported_config.into(),
             move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
                 let mut queue = synth.queue.lock().unwrap();
-                for sample in data.iter_mut() {
+                for sample in data.chunks_exact_mut(channels as usize) {
                     loop {
                         let next = match queue.iter_mut().next() {
                             Some(v) => v,
                             None => {
-                                *sample = 0.0;
+                                sample.iter_mut().for_each(|x| *x = 0.0);
                                 break;
                             }
                         };
 
-                        *sample = match next.oscillator.next() {
+                        let val = match next.oscillator.next() {
                             Some(s) => s,
                             None => {
                                 if next.playing {
@@ -79,6 +71,7 @@ fn main() -> Result<()> {
                                 continue;
                             }
                         } * synth.master_volume;
+                        sample.iter_mut().for_each(|x| *x = val);
                         break;
                     }
                 }
@@ -128,13 +121,12 @@ fn on_event(_time: u64, data: &[u8], synth: &mut Arc<Synth>) {
                 controller,
                 value: _,
             } => match controller.as_int() {
-                // Stop all notes
-                123 | 122 => synth
-                    .queue
-                    .lock()
-                    .unwrap()
-                    .iter_mut()
-                    .for_each(|x| x.playing = false),
+                // Stop all notes and clear queue
+                123 | 122 => {
+                    let mut queue = synth.queue.lock().unwrap();
+                    queue.retain(|x| x.playing);
+                    queue.iter_mut().for_each(|x| x.playing = false)
+                }
                 _ => {}
             },
             _ => {}
@@ -147,7 +139,7 @@ impl Synth {
     fn new() -> Self {
         Self {
             queue: Mutex::new(Vec::new()),
-            master_volume: 0.5,
+            master_volume: 1.0,
             sample_rate: AtomicU32::new(0),
         }
     }
@@ -171,7 +163,7 @@ impl Synth {
         queue.push(Voice {
             key,
             playing: true,
-            oscillator: Oscillator::new(note, self.sample_rate()),
+            oscillator: Oscillator::new(note as f32, self.sample_rate()),
         });
     }
 
@@ -190,7 +182,7 @@ impl Oscillator {
             tone,
             i: 0,
             sample_rate: sample_rate,
-            duration: Some(sample_rate / NOTE_LENGTH_DEVISOR),
+            duration: Some((sample_rate as f32 * NOTE_LENGTH) as u32),
         }
     }
 
@@ -204,17 +196,14 @@ impl Iterator for Oscillator {
 
     fn next(&mut self) -> Option<Self::Item> {
         self.i = self.i.saturating_add(1);
+
+        const DELTA: f32 = 0.05;
         let signal = (self.i as f32 * self.tone * 2.0 * PI / self.sample_rate as f32).sin();
+        let signal = (0.1 / (1.0 / DELTA).atan()) * (signal / DELTA).atan();
 
         match self.duration {
-            Some(d) if self.i > (self.sample_rate / NOTE_GAP_DEVISOR) + d => return None,
-            Some(d) if self.i > (self.sample_rate / NOTE_FADE_DEVISOR) + d => return Some(0.0),
-            Some(d) if self.i > d => {
-                let fade_samples = self.sample_rate / NOTE_FADE_DEVISOR;
-                let samples_in = self.i - d;
-                let inv_amp = samples_in as f32 / fade_samples as f32;
-                return Some(signal * (1.0 - inv_amp));
-            }
+            Some(d) if self.i > (self.sample_rate as f32 * NOTE_GAP) as u32 + d => return None,
+            Some(d) if self.i > d => return Some(0.0),
             _ => {}
         }
 

@@ -11,6 +11,7 @@ Now on to the programs! (In order of how cool I think they are)
 - [Statistics](#statistics) &mdash; Various statistics functions for use on N×1 matrices
 - [Fractions](#fractions) &mdash; Operations for working with exact fractions
 - [Unit converter](#unit-converter) &mdash; A simple unit convertor
+- [Boombox](#boombox) &mdash; Collection of songs you can play through the buzzer
 - [Keyboard](#keyboard) &mdash; Play music using your calculator's built in buzzer
 - [Physical Constants](#physical-constants) &mdash; Lets you push various physical constants onto the stack
 - [Miscellaneous Functions](miscellaneous-functions) &mdash; Miscellaneous mathematical functions missing from the 42s
@@ -45,6 +46,11 @@ The run the "STAT" program (XEQ>STAT), this will open a two page menu with the f
 - Q3 (Q3)
 
 ## Fractions
+
+![Screenshot](https://github.com/Basicprogrammer10/dm42/assets/50306817/159d25b5-fc40-45bd-96e1-fbfabcb16856)
+
+[[download .raw](https://connorcode.com/files/Misc/dm42/fractions.raw)]
+[[source code](fractions.dm42)]
 
 Lets you work with fractions!
 Flag `03` will open the custom menu on exit.
@@ -95,7 +101,30 @@ Currently the units it supports are as follows:
 - **Pressure**: Pascal, Bar, Atmosphere, Pounds per square inch
 - **Power**: Watt, Horsepower
 
+## Boombox
+
+![Screenshot](https://github.com/Basicprogrammer10/dm42/assets/50306817/acf4b74b-888e-44f2-9f78-aaa1f450e907)
+
+[[download .raw](https://connorcode.com/files/Misc/dm42/boombox.raw)]
+[[source code](boombox.dm42)]
+
+Uses the internal buzzer to play music!
+Setting the `03` flag will open the custom menu on exit.
+Currently there are seven songs:
+
+- Say So &ndash; Doja Cat
+- Hips Dont Lie &ndash; Shakira
+- Died in Your Arms &ndash; Cutting Crew
+- WII Channel Music
+- A Thousand Miles &ndash; Vanessa Carlton
+- Super Mario Bros Theme
+- Take On Me &ndash;
+- Barbie Girl &ndash; Aqua
+
 ## Keyboard
+
+[[download .raw](https://connorcode.com/files/Misc/dm42/keyboard.raw)]
+[[source code](keyboard.dm42)]
 
 Lets you play tones with the keypad.
 The first ten keys are used with increasing pitch.
@@ -124,6 +153,11 @@ It contains the following constants:
 From [Meet the Constants &ndash; NIST](https://www.nist.gov/si-redefinition/meet-constants)
 
 ## Miscellaneous Functions
+
+![Screenshot](https://github.com/Basicprogrammer10/dm42/assets/50306817/02398dbe-b400-489d-be61-e879f026d59f)
+
+[[download .raw](https://connorcode.com/files/Misc/dm42/math.raw)]
+[[source code](math.dm42)]
 
 Adds various functions missing from the 42s.
 Exits to the custom menu when flag `03` is set.

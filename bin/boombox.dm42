@@ -14,6 +14,8 @@ export def boom {
 def page_2 {
     CLMENU
     "take", KEY 1 XEQ play_take_on_me
+    "barb", KEY 2 XEQ play_barbie_girl
+    "love", KEY 3 XEQ play_can_you_feel_the_love_tonight
     KEY 7 GTO boom
     KEY 8 GTO rest_options
     menu()
@@ -458,4 +460,206 @@ def play_take_on_me {
     TONE 3
     TONE 3
     TONE 3
+}
+
+def play_barbie_girl {
+    TONE 6
+    TONE 4
+    TONE 6
+    TONE 9
+    TONE 7
+    rest()
+    rest()
+    rest()
+    TONE 5
+    TONE 3
+    TONE 5
+    TONE 8
+    TONE 6
+    rest()
+    rest()
+    TONE 5
+    TONE 4
+    rest()
+    rest()
+    rest()
+    TONE 4
+    TONE 2
+    TONE 5
+    rest()
+    TONE 2
+    rest()
+    rest()
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 6
+    TONE 7
+    TONE 6
+    TONE 5
+    rest()
+    TONE 6
+    TONE 4
+    TONE 6
+    TONE 9
+    TONE 7
+    rest()
+    rest()
+    TONE 7
+    TONE 5
+    TONE 3
+    TONE 5
+    TONE 8
+    TONE 6
+    rest()
+    rest()
+    TONE 5
+    TONE 4
+    rest()
+    rest()
+    TONE 2
+    TONE 4
+    TONE 2
+    TONE 5
+    TONE 2
+    rest()
+    rest()
+    rest()
+    TONE 5
+    TONE 5
+    TONE 5
+    TONE 4
+    TONE 6
+    TONE 4
+}
+
+def play_can_you_feel_the_love_tonight {
+    rest()
+    TONE 1
+    TONE 1
+    TONE 2
+    TONE 3
+    TONE 3
+    TONE 4
+    TONE 4
+    TONE 3
+    TONE 3
+    TONE 0
+    rest()
+    rest()
+    rest()
+    rest()
+    TONE 1
+    TONE 1
+    TONE 2
+    TONE 3
+    TONE 3
+    TONE 4
+    TONE 4
+    TONE 3
+    TONE 3
+    TONE 3
+    TONE 3
+    rest()
+    rest()
+    rest()
+    rest()
+    rest()
+    TONE 1
+    TONE 1
+    TONE 2
+    TONE 3
+    TONE 3
+    TONE 4
+    TONE 4
+    TONE 3
+    TONE 3
+    TONE 0
+    TONE 5
+    TONE 5
+    TONE 5
+    TONE 5
+    rest()
+    TONE 6
+    TONE 6
+    TONE 5
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 5
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 4
+    TONE 4
+    rest()
+    rest()
+    rest()
+    rest()
+    rest()
+    TONE 1
+    TONE 1
+    TONE 2
+    TONE 3
+    TONE 3
+    TONE 4
+    TONE 4
+    TONE 3
+    TONE 3
+    rest()
+    TONE 0
+    TONE 0
+    TONE 0
+    rest()
+    TONE 1
+    TONE 1
+    TONE 2
+    TONE 3
+    TONE 3
+    TONE 4
+    TONE 4
+    TONE 3
+    rest()
+    TONE 1
+    TONE 1
+    TONE 2
+    TONE 3
+    TONE 0
+    TONE 7
+    TONE 0
+    TONE 5
+    TONE 5
+    rest()
+    TONE 3
+    TONE 1
+    TONE 1
+    TONE 6
+    TONE 6
+    TONE 5
+    TONE 4
+    TONE 4
+    TONE 5
+    TONE 4
+    TONE 4
+    rest()
+    TONE 7
+    rest()
+    TONE 5
+    TONE 4
+    TONE 7
+    rest()
+    TONE 5
+    TONE 5
+    TONE 5
+    rest()
+    TONE 3
+    TONE 1
+    TONE 1
+    rest()
+    TONE 0
+    TONE 3
+    TONE 6
+    TONE 5
+    TONE 4
 }
