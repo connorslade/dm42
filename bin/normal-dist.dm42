@@ -1,8 +1,14 @@
+// Refrences:
+// - https://en.wikipedia.org/wiki/Cumulative_distribution_function
+// - https://stackoverflow.com/questions/457408/is-there-an-easily-available-implementation-of-erf-for-python
+
 // (1 + erf((x - mu) / sigma / sqrt(2))) / 2
 export def cdf {
-    0, STO "X", DROP
-    0, STO "MU", DROP
-    1, STO "SIGMA", DROP
+    MVAR "X"
+    MVAR "MU"
+    MVAR "SIGMA"
+    VARMENU cdf
+    STOP
 
     RCL "X"
     RCL "MU"
@@ -12,7 +18,7 @@ export def cdf {
     2
     SQRT
     /
-    erf
+    erf()
     1, +
     2, /
 }
