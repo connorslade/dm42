@@ -1,7 +1,15 @@
+// Normal distribution functions
+// 
+// Im trying to only use my dm42 for my statistics class (bad idea probally),
+// hoping we don't end up needing any more complacated functions...
+
 // Refrences:
+// -  Winitzki, Sergei. "A handy approximation for the error function and its inverse." A lecture note obtained through private communication (2008).
 // - https://en.wikipedia.org/wiki/Cumulative_distribution_function
 // - https://stackoverflow.com/questions/457408/is-there-an-easily-available-implementation-of-erf-for-python
 
+// Normal cumulative distribution function
+//
 // (1 + erf((x - mu) / sigma / sqrt(2))) / 2
 export def cdf {
     MVAR "X"
@@ -21,8 +29,39 @@ export def cdf {
     erf()
     1, +
     2, /
+
+    GTO cdf
 }
 
+// Inverse normal cumulative distribution function
+//
+// mu + sigma * sqrt(2) * inv_erf(2 * x - 1)
+export def icdf {
+    MVAR "X"
+    MVAR "MU"
+    MVAR "SIGMA"
+    VARMENU icdf
+    STOP
+
+    2
+    RCL "X"
+    *
+    1
+    -
+    inv_erf()
+    2
+    SQRT
+    *
+    RCL "SIGMA"
+    *
+    RCL "MU"
+    +
+
+    GTO icdf
+}
+
+// Error function
+//
 // sign = signum(x)
 // x = abs(x)
 // 
@@ -82,6 +121,84 @@ def erf {
     -
 
     // Return sign
+    RCL 01
+    *
+}
+
+// Inverse error function
+//
+// s = signum(x)
+// x = abs(x)
+//
+// a = (8 * (pi - 3)) / (3 * pi * (4 - pi)) # ~0.140012
+// s * sqrt(sqrt((2 / (pi * a) + (log(1 - x ** 2)) / 2) ** 2 - log(1 - x ** 2) / a) - (2 / (pi * a) + log(1 - x ** 2) / 2))
+def inv_erf {
+    DUP
+    ABS
+    STO 00 // |X| in 00
+    DROP
+    SIGN
+    STO 01 // sign(X) in 01
+    DROP
+
+    // Calculate of a
+    8
+    PI
+    3
+    -
+    *
+    4
+    PI
+    -
+    PI
+    *
+    3
+    *
+    /
+    STO 02 // a in 02
+    DROP
+
+    // Calculate
+    2
+    PI
+    RCL 02
+    *
+    /
+    1
+    RCL 00
+    X↑2
+    -
+    LN
+    2
+    /
+    +
+    X↑2
+    1
+    RCL 00
+    X↑2
+    -
+    LN
+    RCL 02
+    /
+    -
+    SQRT
+    2
+    PI
+    RCL 02
+    *
+    /
+    1
+    RCL 00
+    X↑2
+    -
+    LN
+    2
+    /
+    +
+    -
+    SQRT
+
+    // Restore sign
     RCL 01
     *
 }
