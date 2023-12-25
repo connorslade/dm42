@@ -6,6 +6,7 @@ on:
       - "src/**"
       - "midi/**"
       - "synth/**"
+      - "printer/**"
       - "Cargo.*"
 
 jobs:
