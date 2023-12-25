@@ -4,7 +4,7 @@ use anyhow::Result;
 use image::{io::Reader, GenericImageView};
 
 fn main() -> Result<()> {
-    let image = Reader::open("image.bmp")?.decode()?;
+    let image = Reader::open(r"C:\Users\turtl\Downloads\New Project.bmp")?.decode()?;
     assert_eq!(image.width(), 131);
 
     let mut lines = Vec::new();
@@ -15,7 +15,7 @@ fn main() -> Result<()> {
             let mut byte = 0u8;
             for i in 0..8 {
                 let pixel = if image.in_bounds(ci, ri * 8 + i) {
-                    image.get_pixel(ci, ri * 8 + i)[0] != 0
+                    image.get_pixel(ci, ri * 8 + i)[0] == 0
                 } else {
                     false
                 };
@@ -43,6 +43,7 @@ fn main() -> Result<()> {
 
         if y % 2 == 1 || y + 1 == lines.len() {
             prg.push_str("PRLCD\n");
+            prg.push_str("STOP\n");
         }
     }
     fs::write("out.free42", format!("LBL \"PRINT\"\n{prg}"))?;
@@ -54,10 +55,14 @@ fn div_up(a: u32, b: u32) -> u32 {
     (a + b - 1) / b
 }
 
-const CHARSET: &[&str] = &[
-    "÷", "×", "√", "∫", "\0", "Σ", "\0", "π", "¿", "≤", "[LF]", "≥", "≠", "\0", "↓", "→", "←", "μ",
-    "£", "°", "Å", "Ñ", "Ä", "∡", "ᴇ", "Æ", "…", "\0", "Ö", "Ü", "\0", "•", " ", "!", "\"", "#",
-    "$",
+const CHARSET: &[char] = &[
+    '÷', '×', '√', '∫', '\0', 'Σ', '\0', 'π', '¿', '≤', '␊', '≥', '≠', '\0', '↓', '→', '←', 'μ',
+    '£', '°', 'Å', 'Ñ', 'Ä', '∡', 'ᴇ', 'Æ', '…', '\0', 'Ö', 'Ü', '\0', '•', ' ', '!', '\"', '#',
+    '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6',
+    '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+    'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\',
+    ']', '↑', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+    'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', '⊦', '\0', '\0',
 ];
 
 fn encode_prg(cols: &[u8]) -> Result<String> {
@@ -67,31 +72,37 @@ fn encode_prg(cols: &[u8]) -> Result<String> {
     let mut buffer = String::new();
     prg.push_str("CLA\n");
 
-    let mut flush = |buffer: &mut String, prg: &mut String| {
+    let flush = |buffer: &mut String, prg: &mut String| {
         if !buffer.is_empty() {
             prg.push_str(&format!("├\"{}\"\n", buffer));
             buffer.clear();
         }
     };
 
+    let mut drop = 0;
     for &byte in cols {
-        if buffer.len() > 13 {
+        if buffer.chars().count() > 13 {
             flush(&mut buffer, &mut prg);
         }
 
         if byte < CHARSET.len() as u8 {
             let chr = CHARSET[byte as usize];
-            if chr != "\0" {
-                buffer.push_str(chr);
+            if chr != '\0' {
+                buffer.push(chr);
                 continue;
             }
         }
 
         flush(&mut buffer, &mut prg);
-        prg.push_str(&format!("{}\nXTOA\nDROP\n", byte));
+        prg.push_str(&format!("{}\nXTOA\n", byte));
+        drop += 1;
     }
 
     flush(&mut buffer, &mut prg);
+
+    if drop > 0 {
+        prg.push_str(&format!("DROPN {drop}\n"));
+    }
 
     Ok(prg)
 }
