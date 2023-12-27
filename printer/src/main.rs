@@ -4,7 +4,7 @@ use anyhow::Result;
 use image::{io::Reader, GenericImageView};
 
 fn main() -> Result<()> {
-    let image = Reader::open(r"C:\Users\turtl\Downloads\New Project.bmp")?.decode()?;
+    let image = Reader::open(r"img2.png")?.decode()?;
     assert_eq!(image.width(), 131);
 
     let mut lines = Vec::new();
@@ -28,25 +28,36 @@ fn main() -> Result<()> {
         buffer = Vec::new();
     }
 
-    let mut prg = String::new();
+    println!("{} lines", lines.len());
 
-    for (y, line) in lines.iter().enumerate() {
-        if y % 2 == 0 {
-            prg.push_str("CLLCD\n");
+    for (li, lines) in lines.chunks(10).enumerate() {
+        let mut prg = String::new();
+        for (y, line) in lines.iter().enumerate() {
+            if y % 2 == 0 {
+                prg.push_str("CLLCD\n");
+            }
+
+            for (x, bytes) in line.chunks(44).enumerate() {
+                let rng = encode_prg(bytes)?;
+                prg.push_str(&rng);
+                prg.push_str(&format!(
+                    "{}\n{}\nAGRAPH\nDROPN 2\n",
+                    y % 2 * 8 + 1,
+                    x * 44 + 1
+                ));
+            }
+
+            if y % 2 == 1 || y + 1 == lines.len() {
+                prg.push_str("PRLCD\n");
+                prg.push_str("STOP\n");
+            }
         }
 
-        for (x, bytes) in line.chunks(44).enumerate() {
-            let rng = encode_prg(bytes)?;
-            prg.push_str(&rng);
-            prg.push_str(&format!("{}\n{}\nAGRAPH\n", y % 2 * 8 + 1, x * 44 + 1));
-        }
-
-        if y % 2 == 1 || y + 1 == lines.len() {
-            prg.push_str("PRLCD\n");
-            prg.push_str("STOP\n");
-        }
+        fs::write(
+            format!("out-{li}.free42"),
+            format!("LBL \"PRNT{li}\"\n{prg}"),
+        )?;
     }
-    fs::write("out.free42", format!("LBL \"PRINT\"\n{prg}"))?;
 
     Ok(())
 }
@@ -89,6 +100,9 @@ fn encode_prg(cols: &[u8]) -> Result<String> {
             let chr = CHARSET[byte as usize];
             if chr != '\0' {
                 buffer.push(chr);
+                if chr == '\\' {
+                    buffer.push('\\');
+                }
                 continue;
             }
         }
@@ -100,8 +114,9 @@ fn encode_prg(cols: &[u8]) -> Result<String> {
 
     flush(&mut buffer, &mut prg);
 
-    if drop > 0 {
-        prg.push_str(&format!("DROPN {drop}\n"));
+    while drop > 0 {
+        prg.push_str(&format!("DROPN {}\n", drop.min(9)));
+        drop -= 9;
     }
 
     Ok(prg)
