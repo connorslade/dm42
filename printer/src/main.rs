@@ -5,13 +5,15 @@ mod args;
 mod data;
 mod image;
 mod misc;
-use args::Args;
+mod text;
+use args::{Args, SubCommand};
 
 fn main() -> Result<()> {
     let args = Args::parse();
 
     match args.cmd {
-        args::SubCommand::Image(image_args) => image::encode(image_args)?,
+        SubCommand::Image(args) => image::encode(args)?,
+        SubCommand::Text(args) => text::encode(args)?,
     }
 
     Ok(())
