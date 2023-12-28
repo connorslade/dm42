@@ -5,7 +5,7 @@ edition = "2021"
 
 [workspace]
 resolver = "2"
-members = ["midi", "synth", "printer"]
+members = ["hp42s", "midi", "synth", "printer"]
 
 [dependencies]
 anyhow = "1.0.75"
