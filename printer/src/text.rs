@@ -6,10 +6,24 @@ use crate::args::TextArgs;
 
 pub fn encode(args: TextArgs) -> Result<()> {
     let text = fs::read_to_string(args.input)?;
-    let lines = text
-        .lines()
-        .map(|l| truncate(l, 22).trim_end())
-        .collect::<Vec<_>>();
+    let lines = if args.no_wrap {
+        text.lines()
+            .map(|l| truncate(l, 22).trim_end())
+            .collect::<Vec<_>>()
+    } else {
+        text.lines()
+            .map(|l| l.trim_end())
+            .flat_map(|l| {
+                let mut lines = Vec::new();
+                let mut i = 0;
+                while i < l.len() {
+                    lines.push(truncate(&l[i..], 22));
+                    i += 22;
+                }
+                lines
+            })
+            .collect::<Vec<_>>()
+    };
 
     if args.preview {
         for line in &lines {
@@ -22,7 +36,6 @@ pub fn encode(args: TextArgs) -> Result<()> {
     }
 
     let mut prg = String::new();
-
     for line in lines {
         prg.push_str(&encode_string(line));
         prg.push_str("AVIEW\n");
