@@ -28,6 +28,9 @@ pub struct ImageArgs {
     /// If the total number of lines is less than this, only one program will be generated.
     #[clap(long, default_value_t = 10)]
     pub program_lines: usize,
+    /// Invert the image.
+    #[clap(long)]
+    pub invert: bool,
 }
 
 #[derive(Parser)]

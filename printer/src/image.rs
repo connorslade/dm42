@@ -26,7 +26,7 @@ pub fn encode(args: ImageArgs) -> Result<()> {
                     image.get_pixel(ci, ri * 8 + i)[0] == 0
                 } else {
                     false
-                };
+                } ^ args.invert;
 
                 byte |= (pixel as u8) << i;
             }
