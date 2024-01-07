@@ -1,7 +1,6 @@
 export def wstat {
     STO "A"
     INDEX "A"
-    // TODO: Assert N*2
 
     CLMENU
     "mean", KEY 1 XEQ mean
@@ -26,14 +25,18 @@ def tsam {
     CF 05
 }
 
-// Sum(x * y) / Sum(y)
-def mean {
+def index {
     1, 1
     STOIJ
     DROPN 2
+    J+, J-
+    // TODO: Assert N*2
+}
 
-    0
-    0
+// Sum(x * y) / Sum(y)
+def mean {
+    index()
+    0, 0
     while { FC? 76} {
         RCLEL
         J+
@@ -48,23 +51,14 @@ def mean {
     /
 }
 
-// Sqrt( 
-//    Sum( (x-mean)^2)*y) )
-//     ------------------
-//           Sum(y)
-// )
+// Sqrt(Sum((x-mean)^2)*y))/Sum(y))
 def std {
     mean()
     STO "B"
     DROP
 
-    INDEX "A"
-    1, 1
-    STOIJ
-    DROPN 2
-
-    0
-    0
+    index()
+    0, 0
     while { FC? 76} {
         RCLEL
         RCL "B"
@@ -78,7 +72,12 @@ def std {
         +
         I+
     }
+
     X<>Y
+    if { FS? 05 } {
+        1
+        -
+    }
     /
     SQRT
 }
