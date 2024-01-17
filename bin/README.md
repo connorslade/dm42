@@ -3,6 +3,11 @@
 > [!NOTE]  
 > These programs are written for the free42 emulator and as such may or may not run on the original hp 42s.
 
+> [!WARNING]
+> I haven't updated this document with many of my newer programs.
+> Ill get to it eventually.
+> Maybe.
+
 There are two file formats used for programs in this folder, `.dm42` and `.free42`.
 Free42 files are raw program listings that can be loaded with free42 directly, while the Dm42 files must be run through my transpiler / preprocessor first.
 In either case, the `.raw` files for each program will be linked in their respective section.
