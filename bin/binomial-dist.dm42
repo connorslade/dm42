@@ -1,0 +1,75 @@
+// Binomial distribution functions
+
+// Binomial probability mass function
+export def b_pmf {
+    MVAR "N"
+    MVAR "K"
+    MVAR "P"
+    VARMENU b_pmf
+    STOP
+
+    // n choose k
+    RCL "N"
+    RCL "K"
+    COMB
+
+    // p^k
+    RCL "P"
+    RCL "K"
+    Y↑X
+    *
+
+    // (1-p)^(n-k)
+    1
+    RCL "P"
+    -
+    RCL "N"
+    RCL "K"
+    -
+    Y↑X
+    *
+}
+
+// Binomial cumulative distribution function
+// Sum of (n choose i) * p^i * * (1-p)^(n-i) for i = 0 to floor(k)
+export def b_cdf {
+    MVAR "N"
+    MVAR "K"
+    MVAR "P"
+    VARMENU b_cdf
+    STOP
+
+    0
+    RCL "K"
+    1, +
+    IP
+
+    while { X>0? } {
+        1, -
+        DUP
+        STO 01
+
+        RCL "N"
+        X<>Y
+        COMB
+
+        RCL "P"
+        RCL 01
+        Y↑X
+        *
+
+        1
+        RCL "P"
+        -
+        RCL "N"
+        RCL 01
+        -
+        Y↑X
+        *
+
+        STO+ ST Z
+        DROP
+    }
+
+    DROP
+}
