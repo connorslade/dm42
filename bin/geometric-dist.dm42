@@ -1,0 +1,36 @@
+// Geometric distribution functions
+
+// Geometric probability mass function
+// (1-p)^(k-1) * p
+export def g_pmf {
+    MVAR "K"
+    MVAR "P"
+    VARMENU g_pmf
+    STOP
+
+    1
+    RCL "P"
+    -
+    RCL "K"
+    Y↑X
+    RCL "P"
+    *
+}
+
+// Geoemtric cumulative distribution function
+// 1-(1-p)^floor(k)
+export def g_cdf {
+    MVAR "K"
+    MVAR "P"
+    VARMENU g_cdf
+    STOP
+
+    1, 1
+    RCL "P"
+    -
+    RCL "K"
+    IP
+    1, +
+    Y↑X
+    -
+}
