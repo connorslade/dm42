@@ -5,6 +5,7 @@
 // - Log_y(x)
 // - xth root of y
 // - Hypot
+// - Quadratic Solver
 
 export def math {
     CLMENU
@@ -13,6 +14,7 @@ export def math {
     "logy x", KEY 3 XEQ log_yx
     "x√y",    KEY 4 XEQ x_root_y
     "hypot",  KEY 5 XEQ hypot
+    "quad",   KEY 6 XEQ quadratic
     if { FS? 03 } {
         KEY 9 GTO custom_menu
     }
@@ -59,4 +61,21 @@ def hypot {
     X↑2
     +
     SQRT   
+}
+
+def quadratic {
+    RCL ST Z
+    +/-
+    STO/ ST Z
+    /
+    X<>Y
+    2
+    /
+    STO ST Z
+    STO ST T
+    X↑2
+    +
+    SQRT
+    STO- ST Z
+    +
 }
