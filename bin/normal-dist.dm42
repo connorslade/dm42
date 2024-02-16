@@ -30,7 +30,7 @@ export def cdf {
     1, +
     2, /
 
-    GTO cdf
+    exit()
 }
 
 // Inverse normal cumulative distribution function
@@ -57,7 +57,14 @@ export def icdf {
     RCL "MU"
     +
 
-    GTO icdf
+    exit()
+}
+
+def exit {
+    CLMENU
+    if { FS? 03 } {
+        SF 27
+    }
 }
 
 // Error function
