@@ -17,9 +17,10 @@ export def frac {
     "-",    KEY 3 XEQ sub
     "*",    KEY 4 XEQ multiply
     "/",    KEY 5 XEQ divide
-    "dec",  KEY 6 XEQ to_dec
+    "prev", KEY 6 XEQ preview
     KEY 8 GTO page_2
     menu()
+    GTO frac
 }
 
 def page_2 {
@@ -27,14 +28,16 @@ def page_2 {
     "simp", KEY 1 XEQ simplify
     "1/X",  KEY 2 XEQ recip
     "+/-",  KEY 3 XEQ flip_sign
-    "prev", KEY 6 XEQ preview
+    "dec",  KEY 6 XEQ to_dec
     KEY 7 GTO frac
     menu()
+    GTO page_2
 }
 
 def menu {
     if { FS? 03 } {
         KEY 9 GTO custom_menu
+        STOP
     }
     MENU
     STOP
