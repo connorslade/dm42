@@ -1,35 +1,45 @@
 export def wstat {
-    STO "A"
-    INDEX "A"
+    if { MAT? } else {
+        "X is not a matrix", AVIEW
+        STOP
+    }
 
+    STO "A"
+    GTO menu
+}
+
+def menu {
     CLMENU
     "mean", KEY 1 XEQ mean
     "std",  KEY 2 XEQ std
     "tsam", KEY 6 XEQ tsam
-    if { FS? 03 } {
-        KEY 9 GTO custom_menu
-    }
+    FS? 03, KEY 9 GTO custom_menu
+    
     MENU
+    STOP
+    GTO menu
+}
+
+def custom_menu {
+    SF 27
     STOP
 }
 
-def custom_menu { SF 27 }
-
 // Toggles flag 05
 def tsam {
-    if { FS? 05 } {
+    if { FC? 05 } {
         SF 05
-        RTN
+    } else {
+        CF 05
     }
-
-    CF 05
 }
 
 def index {
+    INDEX "A"
     1, 1
     STOIJ
     DROPN 2
-    J+, J-
+    J+, J- // For some reason, this is needed to clear flag 76
     // TODO: Assert N*2
 }
 
@@ -74,7 +84,7 @@ def std {
     }
 
     X<>Y
-    if { FS? 05 } {
+    if { FC? 05 } {
         1
         -
     }
