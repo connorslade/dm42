@@ -29,10 +29,14 @@ export def scatter {
     CLMENU
     CLLCD
 
+    x_axis()
+    y_axis()
+
     while { FC? 76} {
         RCLEL
         RCL 00, -
         RCL 01, RCL 00, -, /
+        // 119, *, IP
         199, *, IP
         1, +
         J+
@@ -41,14 +45,14 @@ export def scatter {
         RCL 02, -
         RCL 03, RCL 02, -, /
         -
+        // 15, *, IP,
         119, *, IP,
         1, +
         J-
         I+
 
         X<>Y
-        PIXEL
-        DROPN 2
+        plot()
     }
 }
 
@@ -61,23 +65,103 @@ def index {
 }
 
 // Draws a dot at the specified coordinates in the x and y registers
-// def plot {
-//     // Y (05), X (04)
-//     1, -
-//     STO 04
-//     DROP
-//     1, -
-//     STO 05
-//     DROP
+def plot {
+    // Y (05), X (04)
+    1, -
+    STO 04
+    DROP
+    1, -
+    STO 05
+    DROP
 
-//     0
-//     while { X≠0? } {
-//         RCL 05
-//         RCL 04
-//         PIXEL
-//         DROPN 2
-//         1
-//         STO+ 04
-//         DROP
-//     }
-// }
+    0.003
+    STO 06
+    DROP
+
+    while { ISG 06 } {
+        0.003
+        STO 07
+        DROP
+
+        while { ISG 07 } {
+            RCL 05
+            RCL 04
+            PIXEL
+
+            1, +
+            STO 04
+            DROPN 2
+        }
+
+        1, STO+ 05
+        3, STO- 04
+        DROPN 2
+    }
+}
+
+def x_axis {
+    RCL 02
+    if { X>0? } {
+        DROP
+        RTN
+    }
+
+    // what pixel represents 0
+    // 02 is miny
+    // 03 is maxy
+
+    RCL 03
+    RCL 03
+    RCL 02
+    -
+    /
+    119
+    *
+    1
+    +
+
+    200.001
+    STO 04
+    DROP
+
+    while { DSE 04 } {
+        RCL 04
+        PIXEL
+        DROP
+    }
+
+    DROPN 2
+}
+
+def y_axis {
+    RCL 00
+    if { X>0? } {
+        DROP
+        RTN
+    }
+
+    RCL 00
+    RCL 01
+    RCL 00
+    -
+    /
+    200
+    *
+    1
+    +
+    IP
+
+    120.001
+    STO 04
+    DROP
+
+    while { DSE 04 } {
+        RCL 04
+        X<>Y
+        PIXEL
+        X<>Y
+        DROP
+    }
+
+    DROPN 2
+}
