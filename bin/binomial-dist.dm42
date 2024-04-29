@@ -28,6 +28,8 @@ export def b_pmf {
     -
     Y↑X
     *
+
+    exit()
 }
 
 // Binomial cumulative distribution function
@@ -72,4 +74,12 @@ export def b_cdf {
     }
 
     DROP
+    exit()
+}
+
+def exit {
+    CLMENU
+    if { FS? 03 } {
+        SF 27
+    }
 }

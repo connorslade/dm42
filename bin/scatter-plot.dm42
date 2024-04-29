@@ -1,0 +1,83 @@
+export def scatter {
+    if { MAT? } else {
+        "not a matrix", AVIEW
+        STOP
+    }
+
+    STO "A"
+    index()
+
+    // Find min and max values for x and y
+    // x: min=0, max=1
+    // y: min=2, max=3
+
+    [MIN]
+    STO 00
+    [MAX]
+    STO 01
+    J+
+
+    [MIN]
+    STO 02
+    [MAX]
+    STO 03
+    J-
+
+    2
+    STO "GrMod" // 200x120
+    DROPN 9
+    CLMENU
+    CLLCD
+
+    while { FC? 76} {
+        RCLEL
+        RCL 00, -
+        RCL 01, RCL 00, -, /
+        199, *, IP
+        1, +
+        J+
+        1
+        RCLEL
+        RCL 02, -
+        RCL 03, RCL 02, -, /
+        -
+        119, *, IP,
+        1, +
+        J-
+        I+
+
+        X<>Y
+        PIXEL
+        DROPN 2
+    }
+}
+
+def index {
+    INDEX "A"
+    1, 1
+    STOIJ
+    DROPN 2
+    J+, J- // For some reason this is needed to clear flag 76
+}
+
+// Draws a dot at the specified coordinates in the x and y registers
+// def plot {
+//     // Y (05), X (04)
+//     1, -
+//     STO 04
+//     DROP
+//     1, -
+//     STO 05
+//     DROP
+
+//     0
+//     while { X≠0? } {
+//         RCL 05
+//         RCL 04
+//         PIXEL
+//         DROPN 2
+//         1
+//         STO+ 04
+//         DROP
+//     }
+// }
