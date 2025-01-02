@@ -222,21 +222,44 @@ def julian_year { 31557600 }
 def bytes {
     CLMENU
     "B",   KEY 1 XEQ byte
+    "KiB",  KEY 2 XEQ kibibyte
+    "MiB",  KEY 3 XEQ bebibyte
+    "GiB",  KEY 4 XEQ gibibyte
+    "TiB",  KEY 5 XEQ tebibyte
+    "PiB",  KEY 6 XEQ pebibyte
+    KEY 7 GTO bytes_2
+    KEY 8 GTO bytes_2
+    convert()
+    GTO bytes
+}
+
+def bytes_2 {
+    CLMENU
+    "B",   KEY 1 XEQ byte
     "KB",  KEY 2 XEQ kilobyte
     "MB",  KEY 3 XEQ megabyte
     "GB",  KEY 4 XEQ gigabyte
     "TB",  KEY 5 XEQ terabyte
     "PB",  KEY 6 XEQ petabyte
+    KEY 7 GTO bytes
+    KEY 8 GTO bytes
     convert()
-    GTO bytes
+    GTO bytes_2
 }
 
 def byte { 1 }
-def kilobyte { 1024 }
-def megabyte { 1048576 }
-def gigabyte { 1073741824 }
-def terabyte { 1099511627776 }
-def petabyte { 1125899906842624 }
+
+def kibibyte { 1024 }
+def bebibyte { 1048576 }
+def gibibyte { 1073741824 }
+def tebibyte { 1099511627776 }
+def pebibyte { 1125899906842624 }
+
+def kilobyte { 1E3 }
+def megabyte { 1E6 }
+def gigabyte { 1E9 }
+def terabyte { 1E12 }
+def petabyte { 1E15 }
 
 // == Pressure ==
 def pressure {
