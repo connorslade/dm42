@@ -1,0 +1,67 @@
+// Flag 3 - Exit to custom menu
+
+export def metric {
+    CLMENU
+    "M", KEY 1 GTO mega
+    "k", KEY 2 GTO kilo
+    "c", KEY 3 GTO centi
+    "m", KEY 4 GTO milli
+    "μ", KEY 5 GTO micro
+    "n", KEY 6 GTO nano
+    KEY 7 GTO page_0
+    KEY 8 GTO page_2
+    menu()
+}
+
+def page_0 {
+    CLMENU
+    "Y", KEY 1 GTO yotta
+    "Z", KEY 2 GTO zetta
+    "E", KEY 3 GTO exa
+    "P", KEY 4 GTO peta
+    "T", KEY 5 GTO tera
+    "G", KEY 6 GTO giga
+    KEY 8 GTO metric
+    menu()
+}
+
+def page_2 {
+    CLMENU
+    "p", KEY 1 GTO pico
+    "f", KEY 2 GTO femto
+    "a", KEY 3 GTO atto
+    "z", KEY 4 GTO zepto
+    "y", KEY 5 GTO yocto
+    "r", KEY 6 GTO ronto
+    KEY 7 GTO metric
+    menu()
+}
+
+def menu {
+    if { FS? 03 } {
+        KEY 9 GTO custom_menu
+    }
+    MENU
+    STOP
+}
+
+def custom_menu { SF 27 }
+
+def yotta { 1e24,  * }
+def zetta { 1e21,  * }
+def exa   { 1e18,  * }
+def peta  { 1e15,  * }
+def tera  { 1e12,  * }
+def giga  { 1e9,   * }
+def mega  { 1e6,   * }
+def kilo  { 1e3,   * }
+def centi { 1e-2,  * }
+def milli { 1e-3,  * }
+def micro { 1e-6,  * }
+def nano  { 1e-9,  * }
+def pico  { 1e-12, * }
+def femto { 1e-15. * }
+def atto  { 1e-18, * }
+def zepto { 1e-21, * }
+def yocto { 1e-24, * }
+def ronto { 1e-27, * }

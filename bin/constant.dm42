@@ -16,6 +16,7 @@ export def const {
 def page_2 {
     CLMENU
     "K↓cd", KEY 1 GTO luminous_efficacy
+    "k↓e",  KEY 2 GTO coulombs_constant
     KEY 7 GTO const
     menu()
 }
@@ -39,3 +40,4 @@ def avogadro_constant { 6.02214076e23 }
 def cesium_hyperfine_transition { 9192631770 }
 def boltzmann_constant { 1.380649e-23 } 
 def luminous_efficacy { 683 }
+def coulombs_constant { 8.987551787e9 }
