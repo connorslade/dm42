@@ -17,6 +17,9 @@ def page_2 {
     CLMENU
     "K↓cd", KEY 1 GTO luminous_efficacy
     "k↓e",  KEY 2 GTO coulombs_constant
+    "m↓e",  KEY 3 GTO mass_electron
+    "m↓p",  KEY 4 GTO mass_proton
+    "m↓n",  KEY 5 GTO mass_neutron
     KEY 7 GTO const
     menu()
 }
@@ -41,3 +44,6 @@ def cesium_hyperfine_transition { 9192631770 }
 def boltzmann_constant { 1.380649e-23 } 
 def luminous_efficacy { 683 }
 def coulombs_constant { 8.987551787e9 }
+def mass_electron { 9.1093837139e-31 }
+def mass_proton { 1.67262192595e-27 }
+def mass_neutron { 1.67492749804e-27 }
