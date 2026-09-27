@@ -60,7 +60,7 @@ def hypot {
     X<>Y
     X↑2
     +
-    SQRT   
+    SQRT
 }
 
 def quadratic {

@@ -1,0 +1,67 @@
+export def vec {
+    CLMENU
+    "vec2",   KEY 1 XEQ vec2
+    "vec3",   KEY 2 XEQ vec3
+    "cross",  KEY 3 XEQ cross
+    "dot",    KEY 4 XEQ dot
+    "abs",    KEY 5 XEQ abs
+    "∡",      KEY 6 XEQ angle
+    if { FS? 03 } {
+        KEY 9 GTO custom_menu
+    }
+    MENU
+    STOP
+    GTO vec
+}
+
+def custom_menu { SF 27 }
+def cross { CROSS }
+def dot { DOT }
+def vec2 { COMPLEX }
+
+def abs {
+    DUP
+    DOT
+    SQRT
+}
+
+def angle {
+    UVEC, X<>Y, UVEC
+    DOT
+    ACOS
+}
+
+export def vec3 {
+    // If top of stack is a matrix, break out its components, otherwise combine
+    // components into a column vector.
+    if { MAT? } {
+        // Move vector into "A"
+        STO "A"
+        INDEX "A"
+        DROP
+
+        // Set matrix pointer to 1,1 (x)
+        1, 1, STOIJ
+        DROPN 2
+
+        RCLEL, J+ // Extract x
+        RCLEL, J+ // Extract y
+        RCLEL, J+ // Extract z
+    } else {
+        // Create new column vector in "A"
+        3, 1, NEWMAT
+        STO "A"
+        INDEX "A"
+        DROP
+
+        // Set matrix pointer to 3,1 (z)
+        3, 1, STOIJ
+        DROPN 2
+
+        STOEL, DROP, J- // Fill z
+        STOEL, DROP, J- // Fill y
+        STOEL, DROP, J- // Fill x
+
+        RCL "A"
+    }
+}
